@@ -1,0 +1,197 @@
+{
+ "note": "oracle groups = true identities (upper bound); teacher = sim_teacher seed 1",
+ "folds": [
+  {
+   "hidden": {
+    "people": 77,
+    "top1_any_gender": 0.2597402597402597,
+    "hungarian_any_gender": 0.33766233766233766,
+    "precision_top10pct_margin_any_gender": 0.5,
+    "precision_top25pct_margin_any_gender": 0.3684210526315789,
+    "precision_top50pct_margin_any_gender": 0.34210526315789475,
+    "chance_top1_any_gender": 0.01298701298701299,
+    "top1_same_gender": 0.2597402597402597,
+    "hungarian_same_gender": 0.33766233766233766,
+    "precision_top10pct_margin_same_gender": 0.5,
+    "precision_top25pct_margin_same_gender": 0.3684210526315789,
+    "precision_top50pct_margin_same_gender": 0.34210526315789475,
+    "chance_top1_same_gender": 0.025974025974025976
+   },
+   "calibration": {
+    "people": 39,
+    "top1_any_gender": 0.358974358974359,
+    "hungarian_any_gender": 0.5641025641025641,
+    "precision_top10pct_margin_any_gender": 0.5,
+    "precision_top25pct_margin_any_gender": 0.4,
+    "precision_top50pct_margin_any_gender": 0.4,
+    "chance_top1_any_gender": 0.02564102564102564,
+    "top1_same_gender": 0.358974358974359,
+    "hungarian_same_gender": 0.5641025641025641,
+    "precision_top10pct_margin_same_gender": 0.5,
+    "precision_top25pct_margin_same_gender": 0.5,
+    "precision_top50pct_margin_same_gender": 0.4,
+    "chance_top1_same_gender": 0.05128205128205128
+   }
+  },
+  {
+   "hidden": {
+    "people": 77,
+    "top1_any_gender": 0.23376623376623376,
+    "hungarian_any_gender": 0.35064935064935066,
+    "precision_top10pct_margin_any_gender": 0.625,
+    "precision_top25pct_margin_any_gender": 0.3684210526315789,
+    "precision_top50pct_margin_any_gender": 0.3157894736842105,
+    "chance_top1_any_gender": 0.01298701298701299,
+    "top1_same_gender": 0.23376623376623376,
+    "hungarian_same_gender": 0.35064935064935066,
+    "precision_top10pct_margin_same_gender": 0.625,
+    "precision_top25pct_margin_same_gender": 0.3684210526315789,
+    "precision_top50pct_margin_same_gender": 0.3157894736842105,
+    "chance_top1_same_gender": 0.025974025974025976
+   },
+   "calibration": {
+    "people": 39,
+    "top1_any_gender": 0.41025641025641024,
+    "hungarian_any_gender": 0.6153846153846154,
+    "precision_top10pct_margin_any_gender": 0.75,
+    "precision_top25pct_margin_any_gender": 0.4,
+    "precision_top50pct_margin_any_gender": 0.45,
+    "chance_top1_any_gender": 0.02564102564102564,
+    "top1_same_gender": 0.41025641025641024,
+    "hungarian_same_gender": 0.6153846153846154,
+    "precision_top10pct_margin_same_gender": 0.75,
+    "precision_top25pct_margin_same_gender": 0.4,
+    "precision_top50pct_margin_same_gender": 0.45,
+    "chance_top1_same_gender": 0.05128205128205128
+   }
+  },
+  {
+   "hidden": {
+    "people": 77,
+    "top1_any_gender": 0.2597402597402597,
+    "hungarian_any_gender": 0.3246753246753247,
+    "precision_top10pct_margin_any_gender": 0.375,
+    "precision_top25pct_margin_any_gender": 0.47368421052631576,
+    "precision_top50pct_margin_any_gender": 0.34210526315789475,
+    "chance_top1_any_gender": 0.01298701298701299,
+    "top1_same_gender": 0.2597402597402597,
+    "hungarian_same_gender": 0.3246753246753247,
+    "precision_top10pct_margin_same_gender": 0.375,
+    "precision_top25pct_margin_same_gender": 0.47368421052631576,
+    "precision_top50pct_margin_same_gender": 0.34210526315789475,
+    "chance_top1_same_gender": 0.025974025974025976
+   },
+   "calibration": {
+    "people": 39,
+    "top1_any_gender": 0.41025641025641024,
+    "hungarian_any_gender": 0.5384615384615384,
+    "precision_top10pct_margin_any_gender": 0.5,
+    "precision_top25pct_margin_any_gender": 0.5,
+    "precision_top50pct_margin_any_gender": 0.4,
+    "chance_top1_any_gender": 0.02564102564102564,
+    "top1_same_gender": 0.41025641025641024,
+    "hungarian_same_gender": 0.5384615384615384,
+    "precision_top10pct_margin_same_gender": 0.5,
+    "precision_top25pct_margin_same_gender": 0.5,
+    "precision_top50pct_margin_same_gender": 0.4,
+    "chance_top1_same_gender": 0.05128205128205128
+   }
+  },
+  {
+   "hidden": {
+    "people": 77,
+    "top1_any_gender": 0.19480519480519481,
+    "hungarian_any_gender": 0.2987012987012987,
+    "precision_top10pct_margin_any_gender": 0.625,
+    "precision_top25pct_margin_any_gender": 0.3684210526315789,
+    "precision_top50pct_margin_any_gender": 0.2894736842105263,
+    "chance_top1_any_gender": 0.01298701298701299,
+    "top1_same_gender": 0.19480519480519481,
+    "hungarian_same_gender": 0.2987012987012987,
+    "precision_top10pct_margin_same_gender": 0.625,
+    "precision_top25pct_margin_same_gender": 0.3684210526315789,
+    "precision_top50pct_margin_same_gender": 0.2894736842105263,
+    "chance_top1_same_gender": 0.025974025974025976
+   },
+   "calibration": {
+    "people": 39,
+    "top1_any_gender": 0.5128205128205128,
+    "hungarian_any_gender": 0.5641025641025641,
+    "precision_top10pct_margin_any_gender": 0.5,
+    "precision_top25pct_margin_any_gender": 0.5,
+    "precision_top50pct_margin_any_gender": 0.6,
+    "chance_top1_any_gender": 0.02564102564102564,
+    "top1_same_gender": 0.5128205128205128,
+    "hungarian_same_gender": 0.5641025641025641,
+    "precision_top10pct_margin_same_gender": 0.5,
+    "precision_top25pct_margin_same_gender": 0.5,
+    "precision_top50pct_margin_same_gender": 0.6,
+    "chance_top1_same_gender": 0.05128205128205128
+   }
+  },
+  {
+   "hidden": {
+    "people": 77,
+    "top1_any_gender": 0.2727272727272727,
+    "hungarian_any_gender": 0.36363636363636365,
+    "precision_top10pct_margin_any_gender": 0.75,
+    "precision_top25pct_margin_any_gender": 0.47368421052631576,
+    "precision_top50pct_margin_any_gender": 0.3157894736842105,
+    "chance_top1_any_gender": 0.01298701298701299,
+    "top1_same_gender": 0.2727272727272727,
+    "hungarian_same_gender": 0.36363636363636365,
+    "precision_top10pct_margin_same_gender": 0.75,
+    "precision_top25pct_margin_same_gender": 0.47368421052631576,
+    "precision_top50pct_margin_same_gender": 0.3157894736842105,
+    "chance_top1_same_gender": 0.025974025974025976
+   },
+   "calibration": {
+    "people": 39,
+    "top1_any_gender": 0.358974358974359,
+    "hungarian_any_gender": 0.5384615384615384,
+    "precision_top10pct_margin_any_gender": 0.5,
+    "precision_top25pct_margin_any_gender": 0.7,
+    "precision_top50pct_margin_any_gender": 0.5,
+    "chance_top1_any_gender": 0.02564102564102564,
+    "top1_same_gender": 0.358974358974359,
+    "hungarian_same_gender": 0.5384615384615384,
+    "precision_top10pct_margin_same_gender": 0.5,
+    "precision_top25pct_margin_same_gender": 0.7,
+    "precision_top50pct_margin_same_gender": 0.5,
+    "chance_top1_same_gender": 0.05128205128205128
+   }
+  }
+ ],
+ "mean": {
+  "hidden": {
+   "people": 77.0,
+   "top1_any_gender": 0.24415584415584415,
+   "hungarian_any_gender": 0.3350649350649351,
+   "precision_top10pct_margin_any_gender": 0.575,
+   "precision_top25pct_margin_any_gender": 0.41052631578947374,
+   "precision_top50pct_margin_any_gender": 0.32105263157894737,
+   "chance_top1_any_gender": 0.012987012987012988,
+   "top1_same_gender": 0.24415584415584415,
+   "hungarian_same_gender": 0.3350649350649351,
+   "precision_top10pct_margin_same_gender": 0.575,
+   "precision_top25pct_margin_same_gender": 0.41052631578947374,
+   "precision_top50pct_margin_same_gender": 0.32105263157894737,
+   "chance_top1_same_gender": 0.025974025974025976
+  },
+  "calibration": {
+   "people": 39.0,
+   "top1_any_gender": 0.41025641025641024,
+   "hungarian_any_gender": 0.5641025641025641,
+   "precision_top10pct_margin_any_gender": 0.55,
+   "precision_top25pct_margin_any_gender": 0.5,
+   "precision_top50pct_margin_any_gender": 0.47000000000000003,
+   "chance_top1_any_gender": 0.02564102564102564,
+   "top1_same_gender": 0.41025641025641024,
+   "hungarian_same_gender": 0.5641025641025641,
+   "precision_top10pct_margin_same_gender": 0.55,
+   "precision_top25pct_margin_same_gender": 0.5199999999999999,
+   "precision_top50pct_margin_same_gender": 0.47000000000000003,
+   "chance_top1_same_gender": 0.05128205128205128
+  }
+ }
+}

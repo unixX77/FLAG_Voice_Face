@@ -1,0 +1,15 @@
+# Frozen audio/vision feature extraction (tested env "video_features": Python 3.10.20, torch 2.7.1+cu118).
+torch==2.7.1
+torchaudio==2.7.1
+transformers==5.15.1
+speechbrain==1.0.3
+huggingface-hub==1.28.0
+numpy==2.2.6
+pandas==2.3.3
+scipy==1.15.3
+scikit-learn==1.7.2
+pillow==12.3.0
+opencv-python==5.0.0.93
+ftfy==6.3.1
+tqdm==4.70.0
+# OpenAI CLIP (needed by FaRL): pip install git+https://github.com/openai/CLIP.git

@@ -1,0 +1,73 @@
+{
+  "run_a": "runs/traits/full/fold_{fold}_seed_{seed}/checkpoint_last.pth.tar",
+  "run_b": "runs/phase2/g3_ecapa_arcface/fold_{fold}_seed_{seed}/checkpoint_last.pth.tar",
+  "seeds": [
+    1,
+    2,
+    3
+  ],
+  "standard": {
+    "a": 0.2034,
+    "b": 0.3291,
+    "b_minus_a": 0.1257,
+    "ci95": [
+      0.0964,
+      0.1553
+    ],
+    "p_b_better": 0.0
+  },
+  "gender": {
+    "a": 0.3197,
+    "b": 0.418,
+    "b_minus_a": 0.0984,
+    "ci95": [
+      0.06,
+      0.1348
+    ],
+    "p_b_better": 0.0
+  },
+  "mean": {
+    "a": 0.2615,
+    "b": 0.3736,
+    "b_minus_a": 0.112,
+    "ci95": [
+      0.08,
+      0.1434
+    ],
+    "p_b_better": 0.0
+  },
+  "per_fold_eer": {
+    "a": {
+      "standard": [
+        0.1726,
+        0.1864,
+        0.2055,
+        0.2233,
+        0.2293
+      ],
+      "gender": [
+        0.2771,
+        0.2986,
+        0.3081,
+        0.3364,
+        0.3781
+      ]
+    },
+    "b": {
+      "standard": [
+        0.2774,
+        0.3614,
+        0.3571,
+        0.3564,
+        0.2931
+      ],
+      "gender": [
+        0.3574,
+        0.4248,
+        0.4207,
+        0.4493,
+        0.4381
+      ]
+    }
+  }
+}

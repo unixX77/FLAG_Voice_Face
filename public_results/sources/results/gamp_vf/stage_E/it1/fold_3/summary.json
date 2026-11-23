@@ -1,0 +1,526 @@
+{
+ "fold": 3,
+ "teacher": "runs/gamp_vf/sim_teacher/fold_3_seed_1/checkpoint_last.pth.tar",
+ "iteration": "it1",
+ "target_precision": 0.9,
+ "thresholds": {
+  "voice_cluster_distance": 0.2,
+  "face_cluster_space": "raw",
+  "face_cluster_distance": 0.3500000000000001,
+  "confidence_high": 0.6960917771523174,
+  "confidence_low": 0.5,
+  "hungarian_min_score": 0.8,
+  "sinkhorn_temperature_dustbin": [
+   0.05,
+   0.8
+  ]
+ },
+ "calibration_top1_accuracy": 0.3181818181818182,
+ "clustering": {
+  "C_voice": {
+   "ari": 0.3909682012968044,
+   "nmi": 0.7050120388816323,
+   "coverage": 0.9804789696115919,
+   "clusters": 110,
+   "true_identities": 39,
+   "purity": 0.6149425287356322,
+   "fragmentation_mean_clusters_per_identity": 7.666666666666667,
+   "identities_without_cluster": 0
+  },
+  "C_face": {
+   "ari": 0.7566932882204529,
+   "nmi": 0.9211077716638995,
+   "coverage": 0.9973837794324814,
+   "clusters": 62,
+   "true_identities": 39,
+   "purity": 0.8769168684422922,
+   "fragmentation_mean_clusters_per_identity": 2.3333333333333335,
+   "identities_without_cluster": 0
+  },
+  "H_voice": {
+   "ari": 0.2835220222284545,
+   "nmi": 0.6833904897264017,
+   "coverage": 0.9884937238493724,
+   "clusters": 163,
+   "true_identities": 77,
+   "purity": 0.5213083213083213,
+   "fragmentation_mean_clusters_per_identity": 7.337662337662338,
+   "identities_without_cluster": 0
+  },
+  "H_face": {
+   "ari": 0.5143475180164666,
+   "nmi": 0.8615344147053515,
+   "coverage": 0.9972422974515025,
+   "clusters": 115,
+   "true_identities": 77,
+   "purity": 0.7275674644798322,
+   "fragmentation_mean_clusters_per_identity": 3.090909090909091,
+   "identities_without_cluster": 0
+  }
+ },
+ "recovery": {
+  "C": {
+   "local": {
+    "accepted_pairs": 1,
+    "correct_pairs": 1,
+    "pair_precision": 1.0,
+    "row_precision": 0.46,
+    "pseudo_rows": 100,
+    "identity_recall": 0.02564102564102564,
+    "voice_row_coverage": 0.08070034212115114,
+    "unmatched_voice_groups": 109,
+    "voice_groups": 110,
+    "face_groups": 62,
+    "errors_by_group": {
+     "gender_m": {
+      "accepted": 1,
+      "errors": 0
+     },
+     "language_Urdu": {
+      "accepted": 1,
+      "errors": 0
+     }
+    }
+   },
+   "hungarian": {
+    "accepted_pairs": 41,
+    "correct_pairs": 19,
+    "pair_precision": 0.4634146341463415,
+    "row_precision": 0.4097847358121331,
+    "pseudo_rows": 2555,
+    "identity_recall": 0.48717948717948717,
+    "voice_row_coverage": 0.6200442745019119,
+    "unmatched_voice_groups": 69,
+    "voice_groups": 110,
+    "face_groups": 62,
+    "errors_by_group": {
+     "gender_f": {
+      "accepted": 12,
+      "errors": 6
+     },
+     "language_English": {
+      "accepted": 11,
+      "errors": 5
+     },
+     "language_German": {
+      "accepted": 2,
+      "errors": 1
+     },
+     "gender_m": {
+      "accepted": 29,
+      "errors": 16
+     },
+     "language_Mixed": {
+      "accepted": 21,
+      "errors": 12
+     },
+     "language_Urdu": {
+      "accepted": 7,
+      "errors": 4
+     }
+    }
+   },
+   "sinkhorn": {
+    "accepted_pairs": 0,
+    "correct_pairs": 0,
+    "pair_precision": NaN,
+    "row_precision": NaN,
+    "pseudo_rows": 0,
+    "identity_recall": 0.0,
+    "voice_row_coverage": 0.0,
+    "unmatched_voice_groups": 110,
+    "voice_groups": 110,
+    "face_groups": 62,
+    "errors_by_group": {}
+   },
+   "local_plus_hungarian": {
+    "accepted_pairs": 15,
+    "correct_pairs": 8,
+    "pair_precision": 0.5333333333333333,
+    "row_precision": 0.41181229773462785,
+    "pseudo_rows": 1236,
+    "identity_recall": 0.20512820512820512,
+    "voice_row_coverage": 0.455624874220165,
+    "unmatched_voice_groups": 95,
+    "voice_groups": 110,
+    "face_groups": 62,
+    "errors_by_group": {
+     "gender_f": {
+      "accepted": 5,
+      "errors": 1
+     },
+     "language_English": {
+      "accepted": 2,
+      "errors": 0
+     },
+     "language_German": {
+      "accepted": 1,
+      "errors": 0
+     },
+     "gender_m": {
+      "accepted": 10,
+      "errors": 6
+     },
+     "language_Mixed": {
+      "accepted": 9,
+      "errors": 5
+     },
+     "language_Urdu": {
+      "accepted": 3,
+      "errors": 2
+     }
+    }
+   },
+   "pairwise_top1": {
+    "accepted_pairs": 110,
+    "correct_pairs": 35,
+    "pair_precision": 0.3181818181818182,
+    "row_precision": 0.27179743046027194,
+    "pseudo_rows": 8017,
+    "identity_recall": 0.5384615384615384,
+    "voice_row_coverage": 0.9804789696115919,
+    "unmatched_voice_groups": 0,
+    "voice_groups": 110,
+    "face_groups": 62,
+    "errors_by_group": {
+     "gender_f": {
+      "accepted": 25,
+      "errors": 14
+     },
+     "language_English": {
+      "accepted": 29,
+      "errors": 20
+     },
+     "language_German": {
+      "accepted": 10,
+      "errors": 6
+     },
+     "gender_m": {
+      "accepted": 85,
+      "errors": 61
+     },
+     "language_Mixed": {
+      "accepted": 47,
+      "errors": 32
+     },
+     "language_Urdu": {
+      "accepted": 24,
+      "errors": 17
+     }
+    }
+   }
+  },
+  "H": {
+   "local": {
+    "accepted_pairs": 2,
+    "correct_pairs": 1,
+    "pair_precision": 0.5,
+    "row_precision": 0.54,
+    "pseudo_rows": 200,
+    "identity_recall": 0.012987012987012988,
+    "voice_row_coverage": 0.10184480791175352,
+    "unmatched_voice_groups": 161,
+    "voice_groups": 163,
+    "face_groups": 115,
+    "errors_by_group": {
+     "gender_f": {
+      "accepted": 2,
+      "errors": 1
+     },
+     "language_Mixed": {
+      "accepted": 1,
+      "errors": 1
+     },
+     "language_Urdu": {
+      "accepted": 1,
+      "errors": 0
+     }
+    }
+   },
+   "hungarian": {
+    "accepted_pairs": 59,
+    "correct_pairs": 11,
+    "pair_precision": 0.1864406779661017,
+    "row_precision": 0.17117117117117117,
+    "pseudo_rows": 4107,
+    "identity_recall": 0.12987012987012986,
+    "voice_row_coverage": 0.7343096234309623,
+    "unmatched_voice_groups": 104,
+    "voice_groups": 163,
+    "face_groups": 115,
+    "errors_by_group": {
+     "gender_m": {
+      "accepted": 39,
+      "errors": 32
+     },
+     "language_Mixed": {
+      "accepted": 19,
+      "errors": 16
+     },
+     "language_English": {
+      "accepted": 22,
+      "errors": 19
+     },
+     "gender_f": {
+      "accepted": 20,
+      "errors": 16
+     },
+     "language_Urdu": {
+      "accepted": 13,
+      "errors": 8
+     },
+     "language_German": {
+      "accepted": 5,
+      "errors": 5
+     }
+    }
+   },
+   "sinkhorn": {
+    "accepted_pairs": 0,
+    "correct_pairs": 0,
+    "pair_precision": NaN,
+    "row_precision": NaN,
+    "pseudo_rows": 0,
+    "identity_recall": 0.0,
+    "voice_row_coverage": 0.0,
+    "unmatched_voice_groups": 163,
+    "voice_groups": 163,
+    "face_groups": 115,
+    "errors_by_group": {}
+   },
+   "local_plus_hungarian": {
+    "accepted_pairs": 16,
+    "correct_pairs": 4,
+    "pair_precision": 0.25,
+    "row_precision": 0.2231012658227848,
+    "pseudo_rows": 1264,
+    "identity_recall": 0.05194805194805195,
+    "voice_row_coverage": 0.4790794979079498,
+    "unmatched_voice_groups": 147,
+    "voice_groups": 163,
+    "face_groups": 115,
+    "errors_by_group": {
+     "gender_m": {
+      "accepted": 12,
+      "errors": 9
+     },
+     "language_Mixed": {
+      "accepted": 7,
+      "errors": 6
+     },
+     "language_English": {
+      "accepted": 4,
+      "errors": 3
+     },
+     "gender_f": {
+      "accepted": 4,
+      "errors": 3
+     },
+     "language_Urdu": {
+      "accepted": 5,
+      "errors": 3
+     }
+    }
+   },
+   "pairwise_top1": {
+    "accepted_pairs": 163,
+    "correct_pairs": 25,
+    "pair_precision": 0.15337423312883436,
+    "row_precision": 0.1540423558509816,
+    "pseudo_rows": 12938,
+    "identity_recall": 0.16883116883116883,
+    "voice_row_coverage": 0.9884937238493724,
+    "unmatched_voice_groups": 0,
+    "voice_groups": 163,
+    "face_groups": 115,
+    "errors_by_group": {
+     "gender_m": {
+      "accepted": 112,
+      "errors": 91
+     },
+     "language_English": {
+      "accepted": 62,
+      "errors": 55
+     },
+     "language_Mixed": {
+      "accepted": 39,
+      "errors": 35
+     },
+     "language_Urdu": {
+      "accepted": 48,
+      "errors": 37
+     },
+     "gender_f": {
+      "accepted": 51,
+      "errors": 47
+     },
+     "language_German": {
+      "accepted": 14,
+      "errors": 11
+     }
+    }
+   }
+  },
+  "H_with_30pct_faces_missing": {
+   "local": {
+    "accepted_pairs": 3,
+    "correct_pairs": 1,
+    "pair_precision": 0.3333333333333333,
+    "row_precision": 0.3933333333333333,
+    "pseudo_rows": 300,
+    "identity_recall": 0.012987012987012988,
+    "voice_row_coverage": 0.12333586915176874,
+    "unmatched_voice_groups": 160,
+    "voice_groups": 163,
+    "face_groups": 80,
+    "errors_by_group": {
+     "gender_f": {
+      "accepted": 2,
+      "errors": 1
+     },
+     "language_Mixed": {
+      "accepted": 1,
+      "errors": 1
+     },
+     "gender_m": {
+      "accepted": 1,
+      "errors": 1
+     },
+     "language_Urdu": {
+      "accepted": 2,
+      "errors": 1
+     }
+    }
+   },
+   "hungarian": {
+    "accepted_pairs": 49,
+    "correct_pairs": 8,
+    "pair_precision": 0.16326530612244897,
+    "row_precision": 0.18979653811114486,
+    "pseudo_rows": 3293,
+    "identity_recall": 0.09090909090909091,
+    "voice_row_coverage": 0.7069227843286421,
+    "unmatched_voice_groups": 114,
+    "voice_groups": 163,
+    "face_groups": 80,
+    "errors_by_group": {
+     "gender_m": {
+      "accepted": 30,
+      "errors": 25
+     },
+     "language_Mixed": {
+      "accepted": 18,
+      "errors": 15
+     },
+     "language_English": {
+      "accepted": 18,
+      "errors": 16
+     },
+     "gender_f": {
+      "accepted": 19,
+      "errors": 16
+     },
+     "language_Urdu": {
+      "accepted": 10,
+      "errors": 7
+     },
+     "language_German": {
+      "accepted": 3,
+      "errors": 3
+     }
+    }
+   },
+   "sinkhorn": {
+    "accepted_pairs": 0,
+    "correct_pairs": 0,
+    "pair_precision": NaN,
+    "row_precision": NaN,
+    "pseudo_rows": 0,
+    "identity_recall": 0.0,
+    "voice_row_coverage": 0.0,
+    "unmatched_voice_groups": 163,
+    "voice_groups": 163,
+    "face_groups": 80,
+    "errors_by_group": {}
+   },
+   "local_plus_hungarian": {
+    "accepted_pairs": 16,
+    "correct_pairs": 5,
+    "pair_precision": 0.3125,
+    "row_precision": 0.2296793437733035,
+    "pseudo_rows": 1341,
+    "identity_recall": 0.06493506493506493,
+    "voice_row_coverage": 0.49695701787751995,
+    "unmatched_voice_groups": 147,
+    "voice_groups": 163,
+    "face_groups": 80,
+    "errors_by_group": {
+     "gender_m": {
+      "accepted": 13,
+      "errors": 9
+     },
+     "language_Mixed": {
+      "accepted": 7,
+      "errors": 6
+     },
+     "language_English": {
+      "accepted": 3,
+      "errors": 1
+     },
+     "gender_f": {
+      "accepted": 3,
+      "errors": 2
+     },
+     "language_Urdu": {
+      "accepted": 6,
+      "errors": 4
+     }
+    }
+   },
+   "pairwise_top1": {
+    "accepted_pairs": 163,
+    "correct_pairs": 22,
+    "pair_precision": 0.13496932515337423,
+    "row_precision": 0.13342536949813222,
+    "pseudo_rows": 12314,
+    "identity_recall": 0.14285714285714285,
+    "voice_row_coverage": 0.9884937238493724,
+    "unmatched_voice_groups": 0,
+    "voice_groups": 163,
+    "face_groups": 80,
+    "errors_by_group": {
+     "gender_m": {
+      "accepted": 112,
+      "errors": 95
+     },
+     "language_English": {
+      "accepted": 62,
+      "errors": 56
+     },
+     "language_Mixed": {
+      "accepted": 39,
+      "errors": 35
+     },
+     "language_Urdu": {
+      "accepted": 48,
+      "errors": 39
+     },
+     "gender_f": {
+      "accepted": 51,
+      "errors": 46
+     },
+     "language_German": {
+      "accepted": 14,
+      "errors": 11
+     }
+    }
+   }
+  }
+ },
+ "chosen_mode": "local",
+ "pseudo_pairs_written": {
+  "pairs": 2,
+  "rows": 200,
+  "conflict_groups": 2
+ }
+}

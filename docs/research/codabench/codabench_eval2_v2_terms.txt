@@ -1,0 +1,6 @@
+Evaluation FLAG phase 1, submission #2: submissions/eval2_v2_terms.zip (md5 94746adf467b58e93f0c695f62d7710b), V2 + bias-corrected age/gender terms
+no_gender English heard   392 trials 196 targets EER 24.49
+no_gender Bangla  unheard 802 trials 401 targets EER 22.69
+gender    English heard   416 trials 208 targets EER 36.06
+gender    Bangla  unheard 716 trials 358 targets EER 37.43
+OVERALL 30.17

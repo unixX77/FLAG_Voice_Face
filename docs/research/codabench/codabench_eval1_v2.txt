@@ -1,0 +1,6 @@
+Evaluation FLAG phase 1, scored 2026-11-13: submissions/eval1_v2.zip (md5 266b7a938f30e25300cd084866c95d29)
+no_gender English heard   392 trials 196 targets EER 26.53
+no_gender Bangla  unheard 802 trials 401 targets EER 25.19
+gender    English heard   416 trials 208 targets EER 36.54
+gender    Bangla  unheard 716 trials 358 targets EER 36.87
+OVERALL 31.28

@@ -1,0 +1,6208 @@
+{
+ "schema": 1,
+ "units": "EER in percent; lower is better; deltas are B - A in EER points",
+ "protocols": {
+  "codabench_dev": "Official CodaBench dev (progress) phase: English + Bangla (unheard) cells, mean of 4 cells.",
+  "codabench_eval": "Official CodaBench evaluation phase 1: English (heard) + Bangla (unheard), mean of 4 cells.",
+  "local_5fold": "Local identity-disjoint 5-fold cross-validation on the 70 official (English) training identities; fixed trial files; 3 seeds x 5 folds x 90 epochs unless 'seeds' says otherwise; paired identity-level bootstrap.",
+  "local_5fold_terms": "As local_5fold, scores include the fixed age/gender terms; term weights chosen on the same folds (small in-sample optimism).",
+  "urdu_holdout": "Unseen-language proxy: 1/5 of MAV-Celeb v1 people held out per fold, no Urdu in training; per-seed scoring (phase2/language_transfer_fusion.py).",
+  "urdu_holdout_seedavg": "Same Urdu holdout, but scores averaged over the 3 seeds before EER (local_validation/evaluate_language_transfer.py); not directly comparable with urdu_holdout.",
+  "german_holdout": "Unseen-language confirmation: 1/5 of MAV-Celeb v3 people held out per fold, no German in training; per-seed scoring; never used for model selection.",
+  "unimodal_diagnostic": "Voice-only or face-only verification/retrieval on unseen people (deterministic trials; Phase II).",
+  "simulation": "Hidden-association simulation (GAMP-VF): labels of 77 external training people hidden; association recovery measured against the hidden truth."
+ },
+ "experiments": [
+  {
+   "id": "codabench_dev_v2",
+   "phase": "1-2 Baseline and V2",
+   "family": "Official results",
+   "title": "V2 on the CodaBench dev (progress) leaderboard",
+   "question": "How does the improved V2 system score officially?",
+   "protocol": "codabench_dev",
+   "outcome": "official",
+   "languages": [
+    "English",
+    "Bangla"
+   ],
+   "systems": {
+    "FOP baseline (organisers)": {
+     "mean": 36.92
+    },
+    "V2": {
+     "mean": 29.11
+    }
+   },
+   "cells": {
+    "V2": {
+     "standard_English": 23.61,
+     "standard_Bangla": 23.19,
+     "gender_English": 35.85,
+     "gender_Bangla": 33.79
+    },
+    "FOP baseline (organisers)": {
+     "standard_English": 32.54,
+     "standard_Bangla": 38.12,
+     "gender_English": 32.99,
+     "gender_Bangla": 44.01
+    }
+   },
+   "interpretation": "V2 is 7.8 points better than the official baseline on the dev leaderboard.",
+   "sources": [
+    {
+     "path": "docs/research/codabench/codabench_dev_v2.txt",
+     "type": "official_result"
+    },
+    {
+     "path": "docs/research/progress_log.md",
+     "type": "progress_log",
+     "lines": "57-63",
+     "extract": "baseline cells"
+    }
+   ]
+  },
+  {
+   "id": "codabench_eval_submissions",
+   "phase": "1-2 Baseline and V2",
+   "family": "Official results",
+   "title": "Evaluation-phase submissions #1-#3",
+   "question": "Official scores of the submitted systems",
+   "protocol": "codabench_eval",
+   "outcome": "official",
+   "languages": [
+    "English",
+    "Bangla"
+   ],
+   "systems": {
+    "FOP baseline (organisers)": {
+     "mean": 35.32
+    },
+    "Eval #1: V2": {
+     "mean": 31.28
+    },
+    "Eval #2: V2 + age/gender terms": {
+     "mean": 30.17
+    },
+    "Eval #3: V2 + external data + terms": {
+     "mean": 28.84
+    }
+   },
+   "cells": {
+    "Eval #1: V2": {
+     "standard_English": 26.53,
+     "standard_Bangla": 25.19,
+     "gender_English": 36.54,
+     "gender_Bangla": 36.87
+    },
+    "Eval #2: V2 + age/gender terms": {
+     "standard_English": 24.49,
+     "standard_Bangla": 22.69,
+     "gender_English": 36.06,
+     "gender_Bangla": 37.43
+    },
+    "Eval #3: V2 + external data + terms": {
+     "standard_English": 22.96,
+     "standard_Bangla": 21.2,
+     "gender_English": 34.62,
+     "gender_Bangla": 36.59
+    }
+   },
+   "context": {
+    "leaderboard_13_nov": {
+     "entries": 34,
+     "median": 22.47,
+     "top": 14.3,
+     "rank_of_eval2": "32 of 34"
+    }
+   },
+   "interpretation": "Local predictions transferred closely (eval #3: local -1.34, CodaBench -1.33). The system remains well behind the leaderboard median (22.47 on 13 Nov). Eval #4-#6 candidates have no submission record; the final challenge ranking is not available.",
+   "sources": [
+    {
+     "path": "docs/research/codabench/codabench_eval1_v2.txt",
+     "type": "official_result"
+    },
+    {
+     "path": "docs/research/codabench/codabench_eval2_v2_terms.txt",
+     "type": "official_result"
+    },
+    {
+     "path": "docs/research/progress_log.md",
+     "type": "progress_log",
+     "lines": "64-71",
+     "extract": "baseline + leaderboard context"
+    },
+    {
+     "path": "docs/research/progress_log.md",
+     "type": "progress_log",
+     "lines": "975-987",
+     "extract": "eval #3 cells"
+    }
+   ]
+  },
+  {
+   "id": "v1_to_v2",
+   "phase": "1-2 Baseline and V2",
+   "family": "Representation",
+   "title": "V1 -> V2: all-layer WavLM, SupCon, regularised heads",
+   "question": "Do broader WavLM features and a supervised contrastive objective beat the V1 x-vector/ArcFace design?",
+   "hypothesis": "Speaker-verification x-vectors discard traits shared with faces; all-layer WavLM keeps them.",
+   "protocol": "local_5fold",
+   "outcome": "adopted",
+   "seeds": [
+    1
+   ],
+   "systems": {
+    "V1 (FaRL + WavLM x-vector, ArcFace heads), best epoch": {
+     "standard": 25.9,
+     "gender": 37.5,
+     "mean": 31.7
+    },
+    "V2, best epoch": {
+     "standard": 22.4,
+     "gender": 33.5,
+     "mean": 28.0
+    },
+    "V2, fixed epoch 90": {
+     "standard": 23.1,
+     "gender": 34.4,
+     "mean": 28.8
+    }
+   },
+   "comparison": {
+    "a": "V1",
+    "b": "V2",
+    "delta": {
+     "standard": {
+      "value": -2.9,
+      "ci95": [
+       -5.5,
+       -0.2
+      ]
+     },
+     "gender": {
+      "value": -3.9,
+      "ci95": [
+       -7.3,
+       -0.5
+      ]
+     }
+    }
+   },
+   "interpretation": "Both tracks improve significantly; V2 became the base system.",
+   "sources": [
+    {
+     "path": "docs/research/progress_log.md",
+     "type": "progress_log",
+     "lines": "203-206",
+     "extract": "V1/V2 five-fold numbers and paired CI"
+    }
+   ]
+  },
+  {
+   "id": "v2_reference",
+   "phase": "1-2 Baseline and V2",
+   "family": "Baseline",
+   "title": "V2 reference (3 seeds x 5 folds, epoch 90)",
+   "question": "Reference numbers for every later paired comparison",
+   "protocol": "local_5fold",
+   "outcome": "baseline",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "systems": {
+    "V2": {
+     "standard": 22.88,
+     "gender": 34.17,
+     "mean": 28.52
+    }
+   },
+   "interpretation": "All Stage 3-4 comparisons are paired against these runs (runs/voice_aug/base).",
+   "sources": [
+    {
+     "path": "public_results/sources/runs/voice_aug/compare_base_vs_aug25.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ]
+  },
+  {
+   "id": "aug50",
+   "phase": "4 Architecture exploration",
+   "family": "Training",
+   "title": "Acoustic augmentation (50% clean)",
+   "question": "Does 'Voice augmentation (clean 50%)' improve on V2?",
+   "hypothesis": "Noise/reverb/codec augmentation regularises the voice branch.",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Worse on both tracks; augmented views move features far from their clip.",
+   "systems": {
+    "V2": {
+     "standard": 22.88,
+     "gender": 34.17,
+     "mean": 28.52
+    },
+    "Voice augmentation (clean 50%)": {
+     "standard": 23.46,
+     "gender": 35.24,
+     "mean": 29.35
+    }
+   },
+   "comparison": {
+    "a": "V2",
+    "b": "Voice augmentation (clean 50%)",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": 0.58,
+      "ci95": [
+       -0.28,
+       1.46
+      ],
+      "p_b_better": 0.092
+     },
+     "gender": {
+      "value": 1.07,
+      "ci95": [
+       -0.16,
+       2.29
+      ],
+      "p_b_better": 0.041
+     },
+     "mean": {
+      "value": 0.83,
+      "ci95": [
+       -0.09,
+       1.75
+      ],
+      "p_b_better": 0.037
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/voice_aug/compare_base_vs_aug50.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "V2": {
+     "standard": [
+      18.71,
+      25.93,
+      21.05,
+      27.33,
+      21.36
+     ],
+     "gender": [
+      31.36,
+      36.71,
+      30.55,
+      37.52,
+      34.69
+     ]
+    },
+    "Voice augmentation (clean 50%)": {
+     "standard": [
+      19.93,
+      25.43,
+      21.19,
+      25.31,
+      25.43
+     ],
+     "gender": [
+      31.43,
+      38.24,
+      31.38,
+      36.57,
+      38.57
+     ]
+    }
+   }
+  },
+  {
+   "id": "aug25",
+   "phase": "4 Architecture exploration",
+   "family": "Training",
+   "title": "Acoustic augmentation (25% clean)",
+   "question": "Does 'Voice augmentation (clean 25%)' improve on V2?",
+   "hypothesis": "As above, stronger.",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Significantly worse (mean CI excludes 0).",
+   "systems": {
+    "V2": {
+     "standard": 22.88,
+     "gender": 34.17,
+     "mean": 28.52
+    },
+    "Voice augmentation (clean 25%)": {
+     "standard": 23.76,
+     "gender": 35.49,
+     "mean": 29.62
+    }
+   },
+   "comparison": {
+    "a": "V2",
+    "b": "Voice augmentation (clean 25%)",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": 0.88,
+      "ci95": [
+       -0.11,
+       1.78
+      ],
+      "p_b_better": 0.046
+     },
+     "gender": {
+      "value": 1.32,
+      "ci95": [
+       -0.01,
+       2.58
+      ],
+      "p_b_better": 0.026
+     },
+     "mean": {
+      "value": 1.1,
+      "ci95": [
+       0.05,
+       2.09
+      ],
+      "p_b_better": 0.02
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/voice_aug/compare_base_vs_aug25.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "V2": {
+     "standard": [
+      18.71,
+      25.93,
+      21.05,
+      27.33,
+      21.36
+     ],
+     "gender": [
+      31.36,
+      36.71,
+      30.55,
+      37.52,
+      34.69
+     ]
+    },
+    "Voice augmentation (clean 25%)": {
+     "standard": [
+      20.31,
+      25.57,
+      21.31,
+      25.29,
+      26.31
+     ],
+     "gender": [
+      31.88,
+      37.43,
+      31.86,
+      36.69,
+      39.57
+     ]
+    }
+   }
+  },
+  {
+   "id": "hyperbolic_t010",
+   "phase": "4 Architecture exploration",
+   "family": "Training",
+   "title": "Hyperbolic (Poincare) embeddings, tau = 0.1",
+   "question": "Does 'Hyperbolic, tau 0.1' improve on V2?",
+   "hypothesis": "A hierarchical geometry separates same-gender people better.",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Standard track -1.0 (significant), gender track unchanged; overlapped with the age/gender terms, so not carried forward.",
+   "systems": {
+    "V2": {
+     "standard": 22.88,
+     "gender": 34.17,
+     "mean": 28.52
+    },
+    "Hyperbolic, tau 0.1": {
+     "standard": 21.86,
+     "gender": 34.15,
+     "mean": 28.0
+    }
+   },
+   "comparison": {
+    "a": "V2",
+    "b": "Hyperbolic, tau 0.1",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -1.01,
+      "ci95": [
+       -1.99,
+       -0.25
+      ],
+      "p_b_better": 0.991
+     },
+     "gender": {
+      "value": -0.02,
+      "ci95": [
+       -1.49,
+       0.83
+      ],
+      "p_b_better": 0.652
+     },
+     "mean": {
+      "value": -0.52,
+      "ci95": [
+       -1.66,
+       0.22
+      ],
+      "p_b_better": 0.914
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/hyperbolic/compare_base_vs_hyp_t010.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "V2": {
+     "standard": [
+      18.71,
+      25.93,
+      21.05,
+      27.33,
+      21.36
+     ],
+     "gender": [
+      31.36,
+      36.71,
+      30.55,
+      37.52,
+      34.69
+     ]
+    },
+    "Hyperbolic, tau 0.1": {
+     "standard": [
+      19.19,
+      23.21,
+      20.05,
+      25.76,
+      21.1
+     ],
+     "gender": [
+      31.14,
+      36.76,
+      31.38,
+      38.19,
+      33.26
+     ]
+    }
+   }
+  },
+  {
+   "id": "hyperbolic_t020",
+   "phase": "4 Architecture exploration",
+   "family": "Training",
+   "title": "Hyperbolic (Poincare) embeddings, tau = 0.2",
+   "question": "Does 'Hyperbolic, tau 0.2' improve on V2?",
+   "hypothesis": "As above.",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Standard -1.3 (significant), gender +0.25.",
+   "systems": {
+    "V2": {
+     "standard": 22.88,
+     "gender": 34.17,
+     "mean": 28.52
+    },
+    "Hyperbolic, tau 0.2": {
+     "standard": 21.57,
+     "gender": 34.41,
+     "mean": 27.99
+    }
+   },
+   "comparison": {
+    "a": "V2",
+    "b": "Hyperbolic, tau 0.2",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -1.31,
+      "ci95": [
+       -2.4,
+       -0.24
+      ],
+      "p_b_better": 0.992
+     },
+     "gender": {
+      "value": 0.25,
+      "ci95": [
+       -1.5,
+       1.54
+      ],
+      "p_b_better": 0.461
+     },
+     "mean": {
+      "value": -0.53,
+      "ci95": [
+       -1.83,
+       0.57
+      ],
+      "p_b_better": 0.835
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/hyperbolic/compare_base_vs_hyp_t020.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "V2": {
+     "standard": [
+      18.71,
+      25.93,
+      21.05,
+      27.33,
+      21.36
+     ],
+     "gender": [
+      31.36,
+      36.71,
+      30.55,
+      37.52,
+      34.69
+     ]
+    },
+    "Hyperbolic, tau 0.2": {
+     "standard": [
+      19.02,
+      22.6,
+      19.55,
+      25.76,
+      20.9
+     ],
+     "gender": [
+      31.24,
+      37.17,
+      31.24,
+      38.43,
+      34.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "layer_mix",
+   "phase": "4 Architecture exploration",
+   "family": "Representation",
+   "title": "WavLM learned layer weights",
+   "question": "Does 'Learned layer mix' improve on V2?",
+   "hypothesis": "Learned layer weights beat the plain all-layer mean.",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "No change; learned weights mildly prefer lower layers.",
+   "systems": {
+    "V2": {
+     "standard": 22.88,
+     "gender": 34.17,
+     "mean": 28.52
+    },
+    "Learned layer mix": {
+     "standard": 22.7,
+     "gender": 34.2,
+     "mean": 28.45
+    }
+   },
+   "comparison": {
+    "a": "V2",
+    "b": "Learned layer mix",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -0.18,
+      "ci95": [
+       -0.68,
+       0.29
+      ],
+      "p_b_better": 0.725
+     },
+     "gender": {
+      "value": 0.03,
+      "ci95": [
+       -0.72,
+       0.53
+      ],
+      "p_b_better": 0.572
+     },
+     "mean": {
+      "value": -0.08,
+      "ci95": [
+       -0.59,
+       0.31
+      ],
+      "p_b_better": 0.68
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/layer_attention/compare_base_vs_mix_mean.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "V2": {
+     "standard": [
+      18.71,
+      25.93,
+      21.05,
+      27.33,
+      21.36
+     ],
+     "gender": [
+      31.36,
+      36.71,
+      30.55,
+      37.52,
+      34.69
+     ]
+    },
+    "Learned layer mix": {
+     "standard": [
+      19.0,
+      25.5,
+      20.81,
+      26.67,
+      21.5
+     ],
+     "gender": [
+      31.62,
+      37.07,
+      30.26,
+      37.4,
+      34.62
+     ]
+    }
+   }
+  },
+  {
+   "id": "layer_mix_std",
+   "phase": "4 Architecture exploration",
+   "family": "Representation",
+   "title": "WavLM layer mix with temporal spread",
+   "question": "Does 'Layer mix + temporal std' improve on V2?",
+   "hypothesis": "Adding each layer's temporal spread adds speaker cues.",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Gender worse (CI excludes 0).",
+   "systems": {
+    "V2": {
+     "standard": 22.88,
+     "gender": 34.17,
+     "mean": 28.52
+    },
+    "Layer mix + temporal std": {
+     "standard": 23.33,
+     "gender": 35.4,
+     "mean": 29.37
+    }
+   },
+   "comparison": {
+    "a": "V2",
+    "b": "Layer mix + temporal std",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": 0.45,
+      "ci95": [
+       -0.41,
+       1.35
+      ],
+      "p_b_better": 0.172
+     },
+     "gender": {
+      "value": 1.24,
+      "ci95": [
+       0.09,
+       2.08
+      ],
+      "p_b_better": 0.02
+     },
+     "mean": {
+      "value": 0.85,
+      "ci95": [
+       -0.08,
+       1.63
+      ],
+      "p_b_better": 0.043
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/layer_attention/compare_base_vs_mix_meanstd.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "V2": {
+     "standard": [
+      18.71,
+      25.93,
+      21.05,
+      27.33,
+      21.36
+     ],
+     "gender": [
+      31.36,
+      36.71,
+      30.55,
+      37.52,
+      34.69
+     ]
+    },
+    "Layer mix + temporal std": {
+     "standard": [
+      19.17,
+      25.74,
+      20.67,
+      27.43,
+      23.64
+     ],
+     "gender": [
+      31.93,
+      39.12,
+      30.1,
+      39.43,
+      36.45
+     ]
+    }
+   }
+  },
+  {
+   "id": "layer_attention",
+   "phase": "4 Architecture exploration",
+   "family": "Representation",
+   "title": "Per-clip WavLM layer attention",
+   "question": "Does 'Per-clip layer attention' improve on V2?",
+   "hypothesis": "Per-clip attention over layers selects useful layers.",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Significantly worse on both tracks (overfits with 70 identities).",
+   "systems": {
+    "V2": {
+     "standard": 22.88,
+     "gender": 34.17,
+     "mean": 28.52
+    },
+    "Per-clip layer attention": {
+     "standard": 24.43,
+     "gender": 36.3,
+     "mean": 30.36
+    }
+   },
+   "comparison": {
+    "a": "V2",
+    "b": "Per-clip layer attention",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": 1.55,
+      "ci95": [
+       0.39,
+       3.17
+      ],
+      "p_b_better": 0.006
+     },
+     "gender": {
+      "value": 2.13,
+      "ci95": [
+       0.37,
+       3.6
+      ],
+      "p_b_better": 0.009
+     },
+     "mean": {
+      "value": 1.84,
+      "ci95": [
+       0.52,
+       3.24
+      ],
+      "p_b_better": 0.005
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/layer_attention/compare_base_vs_attn_meanstd.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "V2": {
+     "standard": [
+      18.71,
+      25.93,
+      21.05,
+      27.33,
+      21.36
+     ],
+     "gender": [
+      31.36,
+      36.71,
+      30.55,
+      37.52,
+      34.69
+     ]
+    },
+    "Per-clip layer attention": {
+     "standard": [
+      22.5,
+      24.14,
+      22.86,
+      27.5,
+      25.14
+     ],
+     "gender": [
+      35.31,
+      35.88,
+      32.5,
+      39.24,
+      38.57
+     ]
+    }
+   }
+  },
+  {
+   "id": "ecapa_only_v2",
+   "phase": "4 Architecture exploration",
+   "family": "Representation",
+   "title": "ECAPA-TDNN instead of WavLM (70 identities)",
+   "question": "Does 'ECAPA only (70 ids)' improve on V2?",
+   "hypothesis": "A dedicated speaker-verification embedding carries finer person-specific cues.",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "+3.2 mean: speaker embeddings alone lose the traits that link voice to face.",
+   "systems": {
+    "V2": {
+     "standard": 22.88,
+     "gender": 34.17,
+     "mean": 28.52
+    },
+    "ECAPA only (70 ids)": {
+     "standard": 26.27,
+     "gender": 37.26,
+     "mean": 31.76
+    }
+   },
+   "comparison": {
+    "a": "V2",
+    "b": "ECAPA only (70 ids)",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": 3.4,
+      "ci95": [
+       1.24,
+       5.81
+      ],
+      "p_b_better": 0.001
+     },
+     "gender": {
+      "value": 3.09,
+      "ci95": [
+       -0.0,
+       6.44
+      ],
+      "p_b_better": 0.026
+     },
+     "mean": {
+      "value": 3.24,
+      "ci95": [
+       0.75,
+       5.99
+      ],
+      "p_b_better": 0.006
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/speaker_embedding/compare_base_vs_ecapa_only.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "V2": {
+     "standard": [
+      18.71,
+      25.93,
+      21.05,
+      27.33,
+      21.36
+     ],
+     "gender": [
+      31.36,
+      36.71,
+      30.55,
+      37.52,
+      34.69
+     ]
+    },
+    "ECAPA only (70 ids)": {
+     "standard": [
+      22.76,
+      32.17,
+      23.26,
+      27.79,
+      25.38
+     ],
+     "gender": [
+      35.02,
+      42.67,
+      33.36,
+      38.93,
+      36.31
+     ]
+    }
+   }
+  },
+  {
+   "id": "wavlm_ecapa_v2",
+   "phase": "4 Architecture exploration",
+   "family": "Representation",
+   "title": "WavLM + ECAPA concatenation (70 identities)",
+   "question": "Does 'WavLM + ECAPA (70 ids)' improve on V2?",
+   "hypothesis": "ECAPA complements WavLM.",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "No gain with 70 identities (seed-1 gain vanished with seeds 2-3). Revisited in Phase II with 301 identities.",
+   "systems": {
+    "V2": {
+     "standard": 22.88,
+     "gender": 34.17,
+     "mean": 28.52
+    },
+    "WavLM + ECAPA (70 ids)": {
+     "standard": 22.83,
+     "gender": 34.8,
+     "mean": 28.82
+    }
+   },
+   "comparison": {
+    "a": "V2",
+    "b": "WavLM + ECAPA (70 ids)",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -0.05,
+      "ci95": [
+       -1.25,
+       1.22
+      ],
+      "p_b_better": 0.472
+     },
+     "gender": {
+      "value": 0.64,
+      "ci95": [
+       -1.58,
+       2.33
+      ],
+      "p_b_better": 0.342
+     },
+     "mean": {
+      "value": 0.3,
+      "ci95": [
+       -1.29,
+       1.7
+      ],
+      "p_b_better": 0.371
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/speaker_embedding/compare_base_vs_wavlm_ecapa.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "V2": {
+     "standard": [
+      18.71,
+      25.93,
+      21.05,
+      27.33,
+      21.36
+     ],
+     "gender": [
+      31.36,
+      36.71,
+      30.55,
+      37.52,
+      34.69
+     ]
+    },
+    "WavLM + ECAPA (70 ids)": {
+     "standard": [
+      18.4,
+      27.71,
+      20.67,
+      24.02,
+      23.33
+     ],
+     "gender": [
+      29.98,
+      41.64,
+      30.5,
+      35.93,
+      35.98
+     ]
+    }
+   }
+  },
+  {
+   "id": "age_gender_terms_v2",
+   "phase": "4 Architecture exploration",
+   "family": "Scoring",
+   "title": "Bias-corrected age/gender consistency terms (V2)",
+   "question": "Do fixed age/gender-consistency score terms help?",
+   "hypothesis": "V2 under-uses age: impostors 20+ years apart are still accepted 20% of the time.",
+   "protocol": "local_5fold",
+   "outcome": "adopted",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "systems": {
+    "V2": {
+     "standard": 22.88,
+     "gender": 34.17,
+     "mean": 28.52
+    },
+    "V2 + corrected terms": {
+     "standard": 21.5,
+     "gender": 33.94,
+     "mean": 27.72
+    }
+   },
+   "comparison": {
+    "a": "V2",
+    "b": "V2 + corrected terms",
+    "delta": {
+     "standard": {
+      "value": -1.37,
+      "ci95": [
+       -2.05,
+       -0.3
+      ],
+      "p_b_better": 0.997
+     },
+     "gender": {
+      "value": -0.23,
+      "ci95": [
+       -0.48,
+       0.12
+      ],
+      "p_b_better": 0.847
+     },
+     "mean": {
+      "value": -0.8,
+      "ci95": [
+       -1.18,
+       -0.17
+      ],
+      "p_b_better": 0.997
+     }
+    }
+   },
+   "interpretation": "Significant -0.8 mean, almost all on the standard track; submitted as eval #2 (CodaBench -1.1).",
+   "sources": [
+    {
+     "path": "public_results/sources/features/voice_v7_agegender/age_consistency_B_corrected.json",
+     "type": "json"
+    }
+   ]
+  },
+  {
+   "id": "learning_curve",
+   "phase": "4 Architecture exploration",
+   "family": "Data",
+   "title": "Learning curve over training identities",
+   "question": "How much does EER fall with more training identities?",
+   "protocol": "local_5fold",
+   "outcome": "diagnostic",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "points": [
+    {
+     "identities": 20,
+     "standard": 25.09,
+     "gender": 37.55,
+     "mean": 31.32
+    },
+    {
+     "identities": 28,
+     "standard": 24.55,
+     "gender": 35.86,
+     "mean": 30.2
+    },
+    {
+     "identities": 42,
+     "standard": 23.87,
+     "gender": 35.0,
+     "mean": 29.43
+    },
+    {
+     "identities": 56,
+     "standard": 22.86,
+     "gender": 34.25,
+     "mean": 28.55
+    }
+   ],
+   "interpretation": "About -1.6 EER points per doubling of identities on both tracks; motivated the external-data stage.",
+   "sources": [
+    {
+     "path": "docs/research/progress_log.md",
+     "type": "progress_log",
+     "lines": "657-668",
+     "extract": "learning-curve table (15 runs per size)"
+    }
+   ]
+  },
+  {
+   "id": "face_backbones",
+   "phase": "4 Architecture exploration",
+   "family": "Representation",
+   "title": "Alternative face backbones (V2 era)",
+   "question": "Do sharper face features help?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "interpretation": "FaRL variants and FaRL + DINOv2 matched FaRL within noise; DINOv2 alone was worse. No per-variant numbers were logged.",
+   "sources": [
+    {
+     "path": "docs/research/progress_log.md",
+     "type": "progress_log",
+     "lines": "208-210",
+     "extract": "qualitative result"
+    }
+   ]
+  },
+  {
+   "id": "losses_misc",
+   "phase": "4 Architecture exploration",
+   "family": "Training",
+   "title": "Same-gender SupCon, hard negatives, prototype loss, OPL, GADH (V2 era)",
+   "question": "Do alternative objectives help the gender track?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "interpretation": "No gains (same-gender SupCon: +1 point on standard). No per-variant numbers were logged.",
+   "sources": [
+    {
+     "path": "docs/research/progress_log.md",
+     "type": "progress_log",
+     "lines": "212-213",
+     "extract": "qualitative result"
+    }
+   ]
+  },
+  {
+   "id": "pairwise_verifier",
+   "phase": "4 Architecture exploration",
+   "family": "Architecture",
+   "title": "Learned pairwise verifier",
+   "question": "Does a learned matching head beat cosine?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "systems": {
+    "Cosine": {
+     "standard": 28.9,
+     "gender": 39.3,
+     "mean": 34.1
+    },
+    "Verifier alone": {
+     "standard": 33.3,
+     "gender": 39.5,
+     "mean": 36.4
+    },
+    "Best blend": {
+     "standard": 28.6,
+     "gender": 38.7,
+     "mean": 33.7
+    }
+   },
+   "interpretation": "Training identities are almost perfectly separated, so the head learns an easy problem unlike unseen people. Numbers are from an earlier, different local setup and are not comparable with the 3-seed tables.",
+   "sources": [
+    {
+     "path": "docs/research/progress_log.md",
+     "type": "progress_log",
+     "lines": "215-224",
+     "extract": "verifier table"
+    }
+   ]
+  },
+  {
+   "id": "ext_v3_natural",
+   "phase": "3 Data expansion",
+   "family": "Data",
+   "title": "+ MAV-Celeb v3 (natural sampling)",
+   "question": "Do external training identities help?",
+   "hypothesis": "More identities reduce EER (learning curve).",
+   "protocol": "local_5fold",
+   "outcome": "diagnostic",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Standard improves; gender unchanged.",
+   "systems": {
+    "V2": {
+     "standard": 22.88,
+     "gender": 34.17,
+     "mean": 28.52
+    },
+    "+ MAV-Celeb v3 (natural sampling)": {
+     "standard": 21.7,
+     "gender": 34.16,
+     "mean": 27.93
+    }
+   },
+   "comparison": {
+    "a": "V2",
+    "b": "+ MAV-Celeb v3 (natural sampling)",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -1.17,
+      "ci95": [
+       -2.75,
+       0.34
+      ],
+      "p_b_better": 0.94
+     },
+     "gender": {
+      "value": -0.0,
+      "ci95": [
+       -1.91,
+       1.66
+      ],
+      "p_b_better": 0.552
+     },
+     "mean": {
+      "value": -0.59,
+      "ci95": [
+       -2.22,
+       0.89
+      ],
+      "p_b_better": 0.803
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/external/compare_base_vs_v3_natural.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "V2": {
+     "standard": [
+      18.71,
+      25.93,
+      21.05,
+      27.33,
+      21.36
+     ],
+     "gender": [
+      31.36,
+      36.71,
+      30.55,
+      37.52,
+      34.69
+     ]
+    },
+    "+ MAV-Celeb v3 (natural sampling)": {
+     "standard": [
+      18.33,
+      19.9,
+      21.0,
+      25.45,
+      23.83
+     ],
+     "gender": [
+      33.26,
+      32.1,
+      30.26,
+      37.9,
+      37.29
+     ]
+    }
+   }
+  },
+  {
+   "id": "ext_v3_share50",
+   "phase": "3 Data expansion",
+   "family": "Data",
+   "title": "+ MAV-Celeb v3 (50% official share)",
+   "question": "Do external training identities help?",
+   "hypothesis": "More identities reduce EER (learning curve).",
+   "protocol": "local_5fold",
+   "outcome": "diagnostic",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "As natural sampling.",
+   "systems": {
+    "V2": {
+     "standard": 22.88,
+     "gender": 34.17,
+     "mean": 28.52
+    },
+    "+ MAV-Celeb v3 (50% official share)": {
+     "standard": 21.7,
+     "gender": 34.0,
+     "mean": 27.85
+    }
+   },
+   "comparison": {
+    "a": "V2",
+    "b": "+ MAV-Celeb v3 (50% official share)",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -1.17,
+      "ci95": [
+       -2.65,
+       0.51
+      ],
+      "p_b_better": 0.922
+     },
+     "gender": {
+      "value": -0.16,
+      "ci95": [
+       -1.97,
+       1.81
+      ],
+      "p_b_better": 0.574
+     },
+     "mean": {
+      "value": -0.67,
+      "ci95": [
+       -2.23,
+       0.98
+      ],
+      "p_b_better": 0.79
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/external/compare_base_vs_v3_share50.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "V2": {
+     "standard": [
+      18.71,
+      25.93,
+      21.05,
+      27.33,
+      21.36
+     ],
+     "gender": [
+      31.36,
+      36.71,
+      30.55,
+      37.52,
+      34.69
+     ]
+    },
+    "+ MAV-Celeb v3 (50% official share)": {
+     "standard": [
+      18.98,
+      20.02,
+      20.71,
+      24.86,
+      23.95
+     ],
+     "gender": [
+      33.69,
+      31.21,
+      30.14,
+      37.9,
+      37.07
+     ]
+    }
+   }
+  },
+  {
+   "id": "ext_v3vox2_natural",
+   "phase": "3 Data expansion",
+   "family": "Data",
+   "title": "+ v3 + VoxCeleb2 test (natural)",
+   "question": "Do external training identities help?",
+   "hypothesis": "More identities reduce EER (learning curve).",
+   "protocol": "local_5fold",
+   "outcome": "diagnostic",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Larger gain; wide intervals.",
+   "systems": {
+    "V2": {
+     "standard": 22.88,
+     "gender": 34.17,
+     "mean": 28.52
+    },
+    "+ v3 + VoxCeleb2 test (natural)": {
+     "standard": 21.54,
+     "gender": 33.32,
+     "mean": 27.43
+    }
+   },
+   "comparison": {
+    "a": "V2",
+    "b": "+ v3 + VoxCeleb2 test (natural)",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -1.34,
+      "ci95": [
+       -3.45,
+       0.45
+      ],
+      "p_b_better": 0.941
+     },
+     "gender": {
+      "value": -0.85,
+      "ci95": [
+       -3.22,
+       1.87
+      ],
+      "p_b_better": 0.704
+     },
+     "mean": {
+      "value": -1.09,
+      "ci95": [
+       -3.25,
+       1.01
+      ],
+      "p_b_better": 0.86
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/external/compare_base_vs_v3vox2_natural.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "V2": {
+     "standard": [
+      18.71,
+      25.93,
+      21.05,
+      27.33,
+      21.36
+     ],
+     "gender": [
+      31.36,
+      36.71,
+      30.55,
+      37.52,
+      34.69
+     ]
+    },
+    "+ v3 + VoxCeleb2 test (natural)": {
+     "standard": [
+      18.4,
+      18.45,
+      20.86,
+      25.5,
+      24.48
+     ],
+     "gender": [
+      30.57,
+      28.71,
+      32.24,
+      38.12,
+      36.95
+     ]
+    }
+   }
+  },
+  {
+   "id": "ext_v3vox2_share50",
+   "phase": "3 Data expansion",
+   "family": "Data",
+   "title": "+ v3 + VoxCeleb2 test (50% share)",
+   "question": "Do external training identities help?",
+   "hypothesis": "More identities reduce EER (learning curve).",
+   "protocol": "local_5fold",
+   "outcome": "diagnostic",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Standard significant.",
+   "systems": {
+    "V2": {
+     "standard": 22.88,
+     "gender": 34.17,
+     "mean": 28.52
+    },
+    "+ v3 + VoxCeleb2 test (50% share)": {
+     "standard": 21.06,
+     "gender": 33.17,
+     "mean": 27.11
+    }
+   },
+   "comparison": {
+    "a": "V2",
+    "b": "+ v3 + VoxCeleb2 test (50% share)",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -1.82,
+      "ci95": [
+       -3.25,
+       -0.37
+      ],
+      "p_b_better": 0.993
+     },
+     "gender": {
+      "value": -1.0,
+      "ci95": [
+       -2.85,
+       0.67
+      ],
+      "p_b_better": 0.881
+     },
+     "mean": {
+      "value": -1.41,
+      "ci95": [
+       -2.98,
+       0.08
+      ],
+      "p_b_better": 0.971
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/external/compare_base_vs_v3vox2_share50.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "V2": {
+     "standard": [
+      18.71,
+      25.93,
+      21.05,
+      27.33,
+      21.36
+     ],
+     "gender": [
+      31.36,
+      36.71,
+      30.55,
+      37.52,
+      34.69
+     ]
+    },
+    "+ v3 + VoxCeleb2 test (50% share)": {
+     "standard": [
+      17.86,
+      19.0,
+      20.76,
+      23.83,
+      23.83
+     ],
+     "gender": [
+      30.4,
+      30.17,
+      31.1,
+      37.17,
+      37.02
+     ]
+    }
+   }
+  },
+  {
+   "id": "ext_all_natural",
+   "phase": "3 Data expansion",
+   "family": "Data",
+   "title": "+ v1 + v3 + VoxCeleb2 (natural)",
+   "question": "Do external training identities help?",
+   "hypothesis": "More identities reduce EER (learning curve).",
+   "protocol": "local_5fold",
+   "outcome": "diagnostic",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Similar to share50, wider CI.",
+   "systems": {
+    "V2": {
+     "standard": 22.88,
+     "gender": 34.17,
+     "mean": 28.52
+    },
+    "+ v1 + v3 + VoxCeleb2 (natural)": {
+     "standard": 21.01,
+     "gender": 33.06,
+     "mean": 27.04
+    }
+   },
+   "comparison": {
+    "a": "V2",
+    "b": "+ v1 + v3 + VoxCeleb2 (natural)",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -1.87,
+      "ci95": [
+       -3.79,
+       0.13
+      ],
+      "p_b_better": 0.967
+     },
+     "gender": {
+      "value": -1.1,
+      "ci95": [
+       -3.6,
+       1.46
+      ],
+      "p_b_better": 0.788
+     },
+     "mean": {
+      "value": -1.49,
+      "ci95": [
+       -3.52,
+       0.64
+      ],
+      "p_b_better": 0.907
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/external/compare_base_vs_all_natural.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "V2": {
+     "standard": [
+      18.71,
+      25.93,
+      21.05,
+      27.33,
+      21.36
+     ],
+     "gender": [
+      31.36,
+      36.71,
+      30.55,
+      37.52,
+      34.69
+     ]
+    },
+    "+ v1 + v3 + VoxCeleb2 (natural)": {
+     "standard": [
+      17.81,
+      19.93,
+      19.98,
+      22.4,
+      24.93
+     ],
+     "gender": [
+      28.86,
+      30.26,
+      31.26,
+      35.83,
+      39.1
+     ]
+    }
+   }
+  },
+  {
+   "id": "ext_all_share50",
+   "phase": "3 Data expansion",
+   "family": "Data",
+   "title": "+ v1 + v3 + VoxCeleb2 (50% share) = eval #3 model",
+   "question": "Do external training identities help?",
+   "hypothesis": "More identities reduce EER (learning curve).",
+   "protocol": "local_5fold",
+   "outcome": "adopted",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Mean -1.79, significant; adopted (eval #3, CodaBench 28.84).",
+   "systems": {
+    "V2": {
+     "standard": 22.88,
+     "gender": 34.17,
+     "mean": 28.52
+    },
+    "+ v1 + v3 + VoxCeleb2 (50% share) = eval #3 model": {
+     "standard": 21.18,
+     "gender": 32.28,
+     "mean": 26.73
+    }
+   },
+   "comparison": {
+    "a": "V2",
+    "b": "+ v1 + v3 + VoxCeleb2 (50% share) = eval #3 model",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -1.7,
+      "ci95": [
+       -3.32,
+       -0.29
+      ],
+      "p_b_better": 0.991
+     },
+     "gender": {
+      "value": -1.89,
+      "ci95": [
+       -3.83,
+       0.02
+      ],
+      "p_b_better": 0.973
+     },
+     "mean": {
+      "value": -1.79,
+      "ci95": [
+       -3.45,
+       -0.26
+      ],
+      "p_b_better": 0.99
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/external/compare_base_vs_all_share50.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "V2": {
+     "standard": [
+      18.71,
+      25.93,
+      21.05,
+      27.33,
+      21.36
+     ],
+     "gender": [
+      31.36,
+      36.71,
+      30.55,
+      37.52,
+      34.69
+     ]
+    },
+    "+ v1 + v3 + VoxCeleb2 (50% share) = eval #3 model": {
+     "standard": [
+      18.05,
+      19.88,
+      20.4,
+      22.9,
+      24.67
+     ],
+     "gender": [
+      28.71,
+      31.07,
+      30.88,
+      34.24,
+      36.48
+     ]
+    }
+   }
+  },
+  {
+   "id": "eval3_terms",
+   "phase": "3 Data expansion",
+   "family": "Scoring",
+   "title": "Eval #3 model with refitted terms",
+   "question": "Local estimate of the submitted eval #3 system",
+   "protocol": "local_5fold_terms",
+   "outcome": "official",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Local mean with terms; CodaBench eval #3 = 28.84.",
+   "systems": {
+    "V2 + all external (eval #3) + terms": {
+     "standard": 20.42,
+     "gender": 32.2,
+     "mean": 26.31
+    },
+    "V2 + all external (eval #3) (terms fitter, no terms)": {
+     "standard": 21.18,
+     "gender": 32.28,
+     "mean": 26.73
+    }
+   },
+   "term_weights": {
+    "standard_track": {
+     "w_age_per_10y": 0.05,
+     "w_gender": 0.05
+    },
+    "gender_track": {
+     "w_age_per_10y": 0.03,
+     "w_gender": 0.0
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/external/all_share50_attribute_terms.json",
+     "type": "json",
+     "extract": "weights.{no_gender,gender}.cv_mean_eer[_without_terms]"
+    }
+   ]
+  },
+  {
+   "id": "b0_lang",
+   "phase": "3 Data expansion",
+   "family": "Architecture",
+   "title": "+ language adversary + cross-lingual",
+   "question": "Do auxiliary voice->traits->face components help?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "No change on its own.",
+   "systems": {
+    "Eval #3 model (all_share50)": {
+     "standard": 21.18,
+     "gender": 32.28,
+     "mean": 26.73
+    },
+    "+ language adversary + cross-lingual": {
+     "standard": 20.91,
+     "gender": 32.38,
+     "mean": 26.65
+    }
+   },
+   "comparison": {
+    "a": "Eval #3 model (all_share50)",
+    "b": "+ language adversary + cross-lingual",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -0.27,
+      "ci95": [
+       -0.45,
+       0.24
+      ],
+      "p_b_better": 0.675
+     },
+     "gender": {
+      "value": 0.1,
+      "ci95": [
+       -0.42,
+       0.28
+      ],
+      "p_b_better": 0.656
+     },
+     "mean": {
+      "value": -0.08,
+      "ci95": [
+       -0.32,
+       0.18
+      ],
+      "p_b_better": 0.712
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/traits/compare_all_share50_vs_lang.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "Eval #3 model (all_share50)": {
+     "standard": [
+      18.05,
+      19.88,
+      20.4,
+      22.9,
+      24.67
+     ],
+     "gender": [
+      28.71,
+      31.07,
+      30.88,
+      34.24,
+      36.48
+     ]
+    },
+    "+ language adversary + cross-lingual": {
+     "standard": [
+      17.67,
+      19.52,
+      20.38,
+      22.67,
+      24.33
+     ],
+     "gender": [
+      28.6,
+      31.38,
+      30.86,
+      34.33,
+      36.71
+     ]
+    }
+   }
+  },
+  {
+   "id": "b0_traits",
+   "phase": "3 Data expansion",
+   "family": "Architecture",
+   "title": "+ shared trait heads (0.2)",
+   "question": "Do auxiliary voice->traits->face components help?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Tiny gain on its own.",
+   "systems": {
+    "Eval #3 model (all_share50)": {
+     "standard": 21.18,
+     "gender": 32.28,
+     "mean": 26.73
+    },
+    "+ shared trait heads (0.2)": {
+     "standard": 20.95,
+     "gender": 32.27,
+     "mean": 26.61
+    }
+   },
+   "comparison": {
+    "a": "Eval #3 model (all_share50)",
+    "b": "+ shared trait heads (0.2)",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -0.23,
+      "ci95": [
+       -0.33,
+       0.04
+      ],
+      "p_b_better": 0.934
+     },
+     "gender": {
+      "value": -0.0,
+      "ci95": [
+       -0.29,
+       0.14
+      ],
+      "p_b_better": 0.759
+     },
+     "mean": {
+      "value": -0.12,
+      "ci95": [
+       -0.26,
+       0.04
+      ],
+      "p_b_better": 0.922
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/traits/compare_all_share50_vs_traits.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "Eval #3 model (all_share50)": {
+     "standard": [
+      18.05,
+      19.88,
+      20.4,
+      22.9,
+      24.67
+     ],
+     "gender": [
+      28.71,
+      31.07,
+      30.88,
+      34.24,
+      36.48
+     ]
+    },
+    "+ shared trait heads (0.2)": {
+     "standard": [
+      17.81,
+      19.52,
+      20.43,
+      22.74,
+      24.26
+     ],
+     "gender": [
+      28.83,
+      31.05,
+      31.02,
+      33.88,
+      36.57
+     ]
+    }
+   }
+  },
+  {
+   "id": "b0_traits05",
+   "phase": "3 Data expansion",
+   "family": "Architecture",
+   "title": "+ shared trait heads (0.5)",
+   "question": "Do auxiliary voice->traits->face components help?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Tiny gain on its own.",
+   "systems": {
+    "Eval #3 model (all_share50)": {
+     "standard": 21.18,
+     "gender": 32.28,
+     "mean": 26.73
+    },
+    "+ shared trait heads (0.5)": {
+     "standard": 20.89,
+     "gender": 32.27,
+     "mean": 26.58
+    }
+   },
+   "comparison": {
+    "a": "Eval #3 model (all_share50)",
+    "b": "+ shared trait heads (0.5)",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -0.29,
+      "ci95": [
+       -0.55,
+       0.08
+      ],
+      "p_b_better": 0.928
+     },
+     "gender": {
+      "value": -0.0,
+      "ci95": [
+       -0.51,
+       0.21
+      ],
+      "p_b_better": 0.787
+     },
+     "mean": {
+      "value": -0.15,
+      "ci95": [
+       -0.45,
+       0.08
+      ],
+      "p_b_better": 0.918
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/traits/compare_all_share50_vs_traits05.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "Eval #3 model (all_share50)": {
+     "standard": [
+      18.05,
+      19.88,
+      20.4,
+      22.9,
+      24.67
+     ],
+     "gender": [
+      28.71,
+      31.07,
+      30.88,
+      34.24,
+      36.48
+     ]
+    },
+    "+ shared trait heads (0.5)": {
+     "standard": [
+      18.0,
+      18.98,
+      20.24,
+      22.64,
+      24.6
+     ],
+     "gender": [
+      28.95,
+      31.31,
+      30.98,
+      33.36,
+      36.76
+     ]
+    }
+   }
+  },
+  {
+   "id": "b0_egemaps",
+   "phase": "3 Data expansion",
+   "family": "Architecture",
+   "title": "+ eGeMAPS voice features",
+   "question": "Do auxiliary voice->traits->face components help?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Small, not significant.",
+   "systems": {
+    "Eval #3 model (all_share50)": {
+     "standard": 21.18,
+     "gender": 32.28,
+     "mean": 26.73
+    },
+    "+ eGeMAPS voice features": {
+     "standard": 20.6,
+     "gender": 32.2,
+     "mean": 26.4
+    }
+   },
+   "comparison": {
+    "a": "Eval #3 model (all_share50)",
+    "b": "+ eGeMAPS voice features",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -0.59,
+      "ci95": [
+       -1.16,
+       0.46
+      ],
+      "p_b_better": 0.767
+     },
+     "gender": {
+      "value": -0.07,
+      "ci95": [
+       -1.03,
+       0.85
+      ],
+      "p_b_better": 0.52
+     },
+     "mean": {
+      "value": -0.33,
+      "ci95": [
+       -1.03,
+       0.56
+      ],
+      "p_b_better": 0.646
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/traits/compare_all_share50_vs_egemaps.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "Eval #3 model (all_share50)": {
+     "standard": [
+      18.05,
+      19.88,
+      20.4,
+      22.9,
+      24.67
+     ],
+     "gender": [
+      28.71,
+      31.07,
+      30.88,
+      34.24,
+      36.48
+     ]
+    },
+    "+ eGeMAPS voice features": {
+     "standard": [
+      17.24,
+      19.31,
+      20.76,
+      22.36,
+      23.31
+     ],
+     "gender": [
+      27.93,
+      29.95,
+      31.05,
+      34.19,
+      37.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "b0_full",
+   "phase": "3 Data expansion",
+   "family": "Architecture",
+   "title": "B0 = + eGeMAPS + traits + language",
+   "question": "Do auxiliary voice->traits->face components help?",
+   "protocol": "local_5fold",
+   "outcome": "adopted",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Best combination (-0.57 n.s.); becomes B0.",
+   "systems": {
+    "Eval #3 model (all_share50)": {
+     "standard": 21.18,
+     "gender": 32.28,
+     "mean": 26.73
+    },
+    "B0 = + eGeMAPS + traits + language": {
+     "standard": 20.34,
+     "gender": 31.97,
+     "mean": 26.15
+    }
+   },
+   "comparison": {
+    "a": "Eval #3 model (all_share50)",
+    "b": "B0 = + eGeMAPS + traits + language",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -0.84,
+      "ci95": [
+       -1.59,
+       0.14
+      ],
+      "p_b_better": 0.942
+     },
+     "gender": {
+      "value": -0.31,
+      "ci95": [
+       -1.39,
+       0.56
+      ],
+      "p_b_better": 0.772
+     },
+     "mean": {
+      "value": -0.57,
+      "ci95": [
+       -1.38,
+       0.23
+      ],
+      "p_b_better": 0.896
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/traits/compare_all_share50_vs_full.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "Eval #3 model (all_share50)": {
+     "standard": [
+      18.05,
+      19.88,
+      20.4,
+      22.9,
+      24.67
+     ],
+     "gender": [
+      28.71,
+      31.07,
+      30.88,
+      34.24,
+      36.48
+     ]
+    },
+    "B0 = + eGeMAPS + traits + language": {
+     "standard": [
+      17.26,
+      18.64,
+      20.55,
+      22.33,
+      22.93
+     ],
+     "gender": [
+      27.71,
+      29.86,
+      30.81,
+      33.64,
+      37.81
+     ]
+    }
+   }
+  },
+  {
+   "id": "b0_terms",
+   "phase": "3 Data expansion",
+   "family": "Scoring",
+   "title": "B0 with refitted terms (eval #4 zip, not submitted)",
+   "question": "Local estimate of B0 + terms",
+   "protocol": "local_5fold_terms",
+   "outcome": "baseline",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "B0 + terms = 25.94 local mean. The eval #4 zip has no submission record.",
+   "systems": {
+    "B0 + terms": {
+     "standard": 19.97,
+     "gender": 31.92,
+     "mean": 25.94
+    },
+    "B0 (terms fitter, no terms)": {
+     "standard": 20.34,
+     "gender": 31.97,
+     "mean": 26.15
+    }
+   },
+   "term_weights": {
+    "standard_track": {
+     "w_age_per_10y": 0.02,
+     "w_gender": 0.05
+    },
+    "gender_track": {
+     "w_age_per_10y": 0.03,
+     "w_gender": 0.0
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/runs/traits/full_attribute_terms.json",
+     "type": "json",
+     "extract": "weights.{no_gender,gender}.cv_mean_eer[_without_terms]"
+    }
+   ]
+  },
+  {
+   "id": "gamp_b1",
+   "phase": "5 GAMP-VF",
+   "family": "GAMP-VF",
+   "title": "B1 prototype InfoNCE",
+   "question": "Do GAMP-VF prototypes / hard negatives help?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1
+   ],
+   "interpretation": "Worse (seed 1).",
+   "systems": {
+    "B0": {
+     "standard": 20.27,
+     "gender": 31.59,
+     "mean": 25.93
+    },
+    "B1 prototype InfoNCE": {
+     "standard": 20.86,
+     "gender": 32.2,
+     "mean": 26.53
+    }
+   },
+   "comparison": {
+    "a": "B0",
+    "b": "B1 prototype InfoNCE",
+    "seeds": [
+     1
+    ],
+    "delta": {
+     "standard": {
+      "value": 0.59,
+      "ci95": [
+       -0.17,
+       0.9
+      ],
+      "p_b_better": 0.083
+     },
+     "gender": {
+      "value": 0.61,
+      "ci95": [
+       -0.44,
+       1.06
+      ],
+      "p_b_better": 0.154
+     },
+     "mean": {
+      "value": 0.6,
+      "ci95": [
+       -0.13,
+       0.8
+      ],
+      "p_b_better": 0.058
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/gamp_vf/stage_C_screening/compare_b0_vs_b1_proto_seed1.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "B0": {
+     "standard": [
+      17.36,
+      17.57,
+      20.71,
+      23.14,
+      22.57
+     ],
+     "gender": [
+      28.36,
+      27.86,
+      30.14,
+      33.71,
+      37.86
+     ]
+    },
+    "B1 prototype InfoNCE": {
+     "standard": [
+      17.79,
+      18.21,
+      21.14,
+      23.07,
+      24.07
+     ],
+     "gender": [
+      29.07,
+      27.79,
+      30.5,
+      35.36,
+      38.29
+     ]
+    }
+   }
+  },
+  {
+   "id": "gamp_b2",
+   "phase": "5 GAMP-VF",
+   "family": "GAMP-VF",
+   "title": "B2 language-balanced prototypes",
+   "question": "Do GAMP-VF prototypes / hard negatives help?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1
+   ],
+   "interpretation": "No gain (seed 1).",
+   "systems": {
+    "B0": {
+     "standard": 20.27,
+     "gender": 31.59,
+     "mean": 25.93
+    },
+    "B2 language-balanced prototypes": {
+     "standard": 20.41,
+     "gender": 31.86,
+     "mean": 26.14
+    }
+   },
+   "comparison": {
+    "a": "B0",
+    "b": "B2 language-balanced prototypes",
+    "seeds": [
+     1
+    ],
+    "delta": {
+     "standard": {
+      "value": 0.14,
+      "ci95": [
+       -0.73,
+       0.84
+      ],
+      "p_b_better": 0.419
+     },
+     "gender": {
+      "value": 0.27,
+      "ci95": [
+       -1.38,
+       1.32
+      ],
+      "p_b_better": 0.44
+     },
+     "mean": {
+      "value": 0.21,
+      "ci95": [
+       -0.78,
+       0.84
+      ],
+      "p_b_better": 0.41
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/gamp_vf/stage_C_screening/compare_b0_vs_b2_protobal_seed1.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "B0": {
+     "standard": [
+      17.36,
+      17.57,
+      20.71,
+      23.14,
+      22.57
+     ],
+     "gender": [
+      28.36,
+      27.86,
+      30.14,
+      33.71,
+      37.86
+     ]
+    },
+    "B2 language-balanced prototypes": {
+     "standard": [
+      16.79,
+      17.21,
+      21.21,
+      23.0,
+      23.86
+     ],
+     "gender": [
+      29.0,
+      26.71,
+      30.43,
+      34.57,
+      38.57
+     ]
+    }
+   }
+  },
+  {
+   "id": "gamp_b3_nn",
+   "phase": "5 GAMP-VF",
+   "family": "GAMP-VF",
+   "title": "B3 most-confusable negatives",
+   "question": "Do GAMP-VF prototypes / hard negatives help?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1
+   ],
+   "interpretation": "No gain (seed 1).",
+   "systems": {
+    "B0": {
+     "standard": 20.27,
+     "gender": 31.59,
+     "mean": 25.93
+    },
+    "B3 most-confusable negatives": {
+     "standard": 20.23,
+     "gender": 31.76,
+     "mean": 25.99
+    }
+   },
+   "comparison": {
+    "a": "B0",
+    "b": "B3 most-confusable negatives",
+    "seeds": [
+     1
+    ],
+    "delta": {
+     "standard": {
+      "value": -0.04,
+      "ci95": [
+       -0.7,
+       0.51
+      ],
+      "p_b_better": 0.589
+     },
+     "gender": {
+      "value": 0.17,
+      "ci95": [
+       -1.08,
+       0.92
+      ],
+      "p_b_better": 0.505
+     },
+     "mean": {
+      "value": 0.06,
+      "ci95": [
+       -0.66,
+       0.55
+      ],
+      "p_b_better": 0.57
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/gamp_vf/stage_C_screening/compare_b0_vs_b3_nn_seed1.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "B0": {
+     "standard": [
+      17.36,
+      17.57,
+      20.71,
+      23.14,
+      22.57
+     ],
+     "gender": [
+      28.36,
+      27.86,
+      30.14,
+      33.71,
+      37.86
+     ]
+    },
+    "B3 most-confusable negatives": {
+     "standard": [
+      16.57,
+      17.36,
+      21.21,
+      22.71,
+      23.29
+     ],
+     "gender": [
+      28.29,
+      27.36,
+      31.07,
+      35.5,
+      36.57
+     ]
+    }
+   }
+  },
+  {
+   "id": "gamp_b3_sgn100",
+   "phase": "5 GAMP-VF",
+   "family": "GAMP-VF",
+   "title": "B3 same-gender nearest, ratio 1.0",
+   "question": "Do GAMP-VF prototypes / hard negatives help?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1
+   ],
+   "interpretation": "Worse (seed 1).",
+   "systems": {
+    "B0": {
+     "standard": 20.27,
+     "gender": 31.59,
+     "mean": 25.93
+    },
+    "B3 same-gender nearest, ratio 1.0": {
+     "standard": 20.54,
+     "gender": 31.93,
+     "mean": 26.24
+    }
+   },
+   "comparison": {
+    "a": "B0",
+    "b": "B3 same-gender nearest, ratio 1.0",
+    "seeds": [
+     1
+    ],
+    "delta": {
+     "standard": {
+      "value": 0.27,
+      "ci95": [
+       -0.41,
+       0.93
+      ],
+      "p_b_better": 0.233
+     },
+     "gender": {
+      "value": 0.34,
+      "ci95": [
+       -1.16,
+       1.12
+      ],
+      "p_b_better": 0.398
+     },
+     "mean": {
+      "value": 0.31,
+      "ci95": [
+       -0.52,
+       0.82
+      ],
+      "p_b_better": 0.301
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/gamp_vf/stage_C_screening/compare_b0_vs_b3_sgn100_seed1.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "B0": {
+     "standard": [
+      17.36,
+      17.57,
+      20.71,
+      23.14,
+      22.57
+     ],
+     "gender": [
+      28.36,
+      27.86,
+      30.14,
+      33.71,
+      37.86
+     ]
+    },
+    "B3 same-gender nearest, ratio 1.0": {
+     "standard": [
+      17.57,
+      18.21,
+      21.0,
+      22.43,
+      23.5
+     ],
+     "gender": [
+      28.5,
+      29.0,
+      31.36,
+      34.86,
+      35.93
+     ]
+    }
+   }
+  },
+  {
+   "id": "gamp_b3_sg",
+   "phase": "5 GAMP-VF",
+   "family": "GAMP-VF",
+   "title": "B3 same-gender partner sampling",
+   "question": "Do GAMP-VF prototypes / hard negatives help?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Gender -0.41 n.s. (5/5 folds); English-only (Urdu proxy: no gain).",
+   "systems": {
+    "B0": {
+     "standard": 20.34,
+     "gender": 31.97,
+     "mean": 26.15
+    },
+    "B3 same-gender partner sampling": {
+     "standard": 20.27,
+     "gender": 31.55,
+     "mean": 25.91
+    }
+   },
+   "comparison": {
+    "a": "B0",
+    "b": "B3 same-gender partner sampling",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -0.08,
+      "ci95": [
+       -0.46,
+       0.27
+      ],
+      "p_b_better": 0.637
+     },
+     "gender": {
+      "value": -0.41,
+      "ci95": [
+       -1.01,
+       0.31
+      ],
+      "p_b_better": 0.819
+     },
+     "mean": {
+      "value": -0.25,
+      "ci95": [
+       -0.65,
+       0.22
+      ],
+      "p_b_better": 0.81
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/gamp_vf/stage_C_final/compare_b0_vs_b3_sg_3seeds.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "B0": {
+     "standard": [
+      17.26,
+      18.64,
+      20.55,
+      22.33,
+      22.93
+     ],
+     "gender": [
+      27.71,
+      29.86,
+      30.81,
+      33.64,
+      37.81
+     ]
+    },
+    "B3 same-gender partner sampling": {
+     "standard": [
+      17.33,
+      18.57,
+      20.29,
+      21.86,
+      23.29
+     ],
+     "gender": [
+      27.55,
+      29.83,
+      30.48,
+      33.5,
+      36.4
+     ]
+    }
+   }
+  },
+  {
+   "id": "gamp_b3_sga",
+   "phase": "5 GAMP-VF",
+   "family": "GAMP-VF",
+   "title": "B3 same-gender similar-age partner",
+   "question": "Do GAMP-VF prototypes / hard negatives help?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "No change.",
+   "systems": {
+    "B0": {
+     "standard": 20.34,
+     "gender": 31.97,
+     "mean": 26.15
+    },
+    "B3 same-gender similar-age partner": {
+     "standard": 20.43,
+     "gender": 31.92,
+     "mean": 26.18
+    }
+   },
+   "comparison": {
+    "a": "B0",
+    "b": "B3 same-gender similar-age partner",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": 0.09,
+      "ci95": [
+       -0.28,
+       0.51
+      ],
+      "p_b_better": 0.268
+     },
+     "gender": {
+      "value": -0.05,
+      "ci95": [
+       -0.47,
+       0.68
+      ],
+      "p_b_better": 0.368
+     },
+     "mean": {
+      "value": 0.02,
+      "ci95": [
+       -0.31,
+       0.51
+      ],
+      "p_b_better": 0.283
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/gamp_vf/stage_C_final/compare_b0_vs_b3_sga_3seeds.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "B0": {
+     "standard": [
+      17.26,
+      18.64,
+      20.55,
+      22.33,
+      22.93
+     ],
+     "gender": [
+      27.71,
+      29.86,
+      30.81,
+      33.64,
+      37.81
+     ]
+    },
+    "B3 same-gender similar-age partner": {
+     "standard": [
+      17.14,
+      18.83,
+      20.81,
+      21.83,
+      23.55
+     ],
+     "gender": [
+      27.43,
+      29.95,
+      31.14,
+      33.43,
+      37.64
+     ]
+    }
+   }
+  },
+  {
+   "id": "gamp_pseudo_labels",
+   "phase": "5 GAMP-VF",
+   "family": "GAMP-VF",
+   "title": "Pseudo-label recovery on 77 hidden identities",
+   "question": "Can clustering + matching recover hidden face-voice associations reliably enough to train on?",
+   "hypothesis": "Speaker clusters + cross-modal matching yield high-precision pseudo-pairs.",
+   "protocol": "simulation",
+   "outcome": "rejected",
+   "recovery": {
+    "voice_cluster_ari_hidden": 0.266,
+    "face_cluster_ari_hidden": 0.514,
+    "pairwise_top1_precision": 0.156,
+    "hungarian_precision": 0.172,
+    "oracle_groups_top1": 0.244,
+    "oracle_groups_hungarian": 0.335,
+    "oracle_groups_precision_top10pct": 0.575,
+    "target_precision": 0.9
+   },
+   "interpretation": "Even with perfect grouping only 24% top-1 / 34% Hungarian; the 10% most confident matches are 57% correct. No mode reached usable precision.",
+   "sources": [
+    {
+     "path": "public_results/sources/results/gamp_vf/stage_E/it1/fold_0/summary.json",
+     "type": "json"
+    },
+    {
+     "path": "public_results/sources/results/gamp_vf/stage_E/it1/fold_1/summary.json",
+     "type": "json"
+    },
+    {
+     "path": "public_results/sources/results/gamp_vf/stage_E/it1/fold_2/summary.json",
+     "type": "json"
+    },
+    {
+     "path": "public_results/sources/results/gamp_vf/stage_E/it1/fold_3/summary.json",
+     "type": "json"
+    },
+    {
+     "path": "public_results/sources/results/gamp_vf/stage_E/it1/fold_4/summary.json",
+     "type": "json"
+    },
+    {
+     "path": "public_results/sources/results/gamp_vf/stage_F/oracle_group_matching.json",
+     "type": "json"
+    }
+   ]
+  },
+  {
+   "id": "gamp_oracle_headroom",
+   "phase": "5 GAMP-VF",
+   "family": "GAMP-VF",
+   "title": "Headroom: true labels of the 77 hidden people",
+   "question": "Would perfect pseudo-labels help?",
+   "protocol": "local_5fold",
+   "outcome": "diagnostic",
+   "seeds": [
+    1
+   ],
+   "interpretation": "No measurable gain (seed 1), so the simulation cannot show a pseudo-label benefit.",
+   "systems": {
+    "Teacher (77 people hidden)": {
+     "standard": 20.06,
+     "gender": 32.2,
+     "mean": 26.13
+    },
+    "Oracle (true labels)": {
+     "standard": 20.51,
+     "gender": 32.9,
+     "mean": 26.71
+    }
+   },
+   "comparison": {
+    "a": "Teacher (77 people hidden)",
+    "b": "Oracle (true labels)",
+    "seeds": [
+     1
+    ],
+    "delta": {
+     "standard": {
+      "value": 0.46,
+      "ci95": [
+       -0.76,
+       1.6
+      ],
+      "p_b_better": 0.291
+     },
+     "gender": {
+      "value": 0.7,
+      "ci95": [
+       -0.75,
+       2.57
+      ],
+      "p_b_better": 0.166
+     },
+     "mean": {
+      "value": 0.58,
+      "ci95": [
+       -0.66,
+       1.97
+      ],
+      "p_b_better": 0.182
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/gamp_vf/stage_G/compare_teacher_vs_oracle_seed1.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "Teacher (77 people hidden)": {
+     "standard": [
+      18.43,
+      18.64,
+      19.64,
+      21.79,
+      21.79
+     ],
+     "gender": [
+      28.79,
+      31.71,
+      30.14,
+      32.21,
+      38.14
+     ]
+    },
+    "Oracle (true labels)": {
+     "standard": [
+      19.14,
+      17.5,
+      20.36,
+      22.0,
+      23.57
+     ],
+     "gender": [
+      31.14,
+      30.86,
+      31.64,
+      32.64,
+      38.21
+     ]
+    }
+   }
+  },
+  {
+   "id": "p2_audio_unimodal",
+   "phase": "6 Phase II diagnostics",
+   "family": "Diagnostics",
+   "title": "Voice-only speaker verification (same-gender impostors)",
+   "question": "Is the voice input speaker-discriminative across sessions and languages?",
+   "protocol": "unimodal_diagnostic",
+   "outcome": "diagnostic",
+   "unimodal": {
+    "WavLM + eGeMAPS (B0 input), LDA": {
+     "same_language_other_video": 30.47,
+     "cross_language_other_video": 34.19,
+     "same_video": 10.42,
+     "retrieval_R1_other_videos": 0.773
+    },
+    "WavLM all-layer mean, raw": {
+     "same_language_other_video": 41.99,
+     "cross_language_other_video": 43.19,
+     "same_video": 23.9,
+     "retrieval_R1_other_videos": 0.555
+    },
+    "WavLM-SV x-vector (per clip), LDA": {
+     "same_language_other_video": 22.34,
+     "cross_language_other_video": 25.07,
+     "same_video": 12.36,
+     "retrieval_R1_other_videos": 0.904
+    },
+    "ECAPA-TDNN, centred": {
+     "same_language_other_video": 9.78,
+     "cross_language_other_video": 11.0,
+     "same_video": 4.28,
+     "retrieval_R1_other_videos": 0.97
+    }
+   },
+   "interpretation": "B0's voice input is session-dominated (30% EER across videos); ECAPA is ~3x better and nearly language-independent.",
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase2/phase1_audio/metrics.json",
+     "type": "json"
+    },
+    {
+     "path": "public_results/sources/results/phase2/phase1_audio/metrics_speaker_encoders.json",
+     "type": "json"
+    }
+   ]
+  },
+  {
+   "id": "p2_face_unimodal",
+   "phase": "6 Phase II diagnostics",
+   "family": "Diagnostics",
+   "title": "Face-only identity verification",
+   "question": "Is the face input identity-discriminative?",
+   "protocol": "unimodal_diagnostic",
+   "outcome": "diagnostic",
+   "unimodal": {
+    "arcface_insightface": {
+     "same_gender": 1.82,
+     "similar_age": 1.98
+    },
+    "farl": {
+     "same_gender": 12.33,
+     "similar_age": 18.19
+    },
+    "dinov2_l12_patch": {
+     "same_gender": 20.26,
+     "similar_age": 27.87
+    },
+    "b0_full_projected": {
+     "same_gender": 14.53,
+     "similar_age": 20.72
+    }
+   },
+   "interpretation": "ArcFace ~1.8% vs FaRL 12.3% same-gender EER; FaRL tracks age/appearance strongly.",
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase2/phase2_face/metrics.json",
+     "type": "json"
+    }
+   ]
+  },
+  {
+   "id": "g3_ecapa_farl",
+   "phase": "6 Phase II diagnostics",
+   "family": "Cross-modal alignment",
+   "title": "ECAPA + FaRL",
+   "question": "Which factor limits cross-modal verification: encoders, heads or loss?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Better speaker identity, worse face-voice matching on English.",
+   "systems": {
+    "B0": {
+     "standard": 20.34,
+     "gender": 31.97,
+     "mean": 26.15
+    },
+    "ECAPA + FaRL": {
+     "standard": 22.21,
+     "gender": 33.64,
+     "mean": 27.92
+    }
+   },
+   "comparison": {
+    "a": "B0",
+    "b": "ECAPA + FaRL",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": 1.87,
+      "ci95": [
+       -0.22,
+       3.61
+      ],
+      "p_b_better": 0.036
+     },
+     "gender": {
+      "value": 1.67,
+      "ci95": [
+       -1.34,
+       4.55
+      ],
+      "p_b_better": 0.14
+     },
+     "mean": {
+      "value": 1.77,
+      "ci95": [
+       -0.65,
+       3.9
+      ],
+      "p_b_better": 0.08
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase2/phase3_alignment/compare_b0_vs_g3_ecapa_farl.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "B0": {
+     "standard": [
+      17.26,
+      18.64,
+      20.55,
+      22.33,
+      22.93
+     ],
+     "gender": [
+      27.71,
+      29.86,
+      30.81,
+      33.64,
+      37.81
+     ]
+    },
+    "ECAPA + FaRL": {
+     "standard": [
+      19.07,
+      25.02,
+      21.19,
+      23.24,
+      22.52
+     ],
+     "gender": [
+      32.07,
+      38.38,
+      29.74,
+      33.24,
+      34.76
+     ]
+    }
+   }
+  },
+  {
+   "id": "g3_b0_arcface",
+   "phase": "6 Phase II diagnostics",
+   "family": "Cross-modal alignment",
+   "title": "B0 voice + ArcFace",
+   "question": "Which factor limits cross-modal verification: encoders, heads or loss?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "+10 EER: face-recognition features discard voice-predictable attributes.",
+   "systems": {
+    "B0": {
+     "standard": 20.34,
+     "gender": 31.97,
+     "mean": 26.15
+    },
+    "B0 voice + ArcFace": {
+     "standard": 30.89,
+     "gender": 41.34,
+     "mean": 36.11
+    }
+   },
+   "comparison": {
+    "a": "B0",
+    "b": "B0 voice + ArcFace",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": 10.54,
+      "ci95": [
+       7.45,
+       13.58
+      ],
+      "p_b_better": 0.0
+     },
+     "gender": {
+      "value": 9.37,
+      "ci95": [
+       5.52,
+       13.01
+      ],
+      "p_b_better": 0.0
+     },
+     "mean": {
+      "value": 9.96,
+      "ci95": [
+       6.62,
+       13.27
+      ],
+      "p_b_better": 0.0
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase2/phase3_alignment/compare_b0_vs_g3_b0_arcface.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "B0": {
+     "standard": [
+      17.26,
+      18.64,
+      20.55,
+      22.33,
+      22.93
+     ],
+     "gender": [
+      27.71,
+      29.86,
+      30.81,
+      33.64,
+      37.81
+     ]
+    },
+    "B0 voice + ArcFace": {
+     "standard": [
+      26.93,
+      31.76,
+      31.48,
+      34.31,
+      29.95
+     ],
+     "gender": [
+      38.5,
+      40.4,
+      38.19,
+      46.07,
+      43.52
+     ]
+    }
+   }
+  },
+  {
+   "id": "g3_ecapa_arcface",
+   "phase": "6 Phase II diagnostics",
+   "family": "Cross-modal alignment",
+   "title": "ECAPA + ArcFace",
+   "question": "Which factor limits cross-modal verification: encoders, heads or loss?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Worst cell of the 2x2.",
+   "systems": {
+    "B0": {
+     "standard": 20.34,
+     "gender": 31.97,
+     "mean": 26.15
+    },
+    "ECAPA + ArcFace": {
+     "standard": 32.91,
+     "gender": 41.8,
+     "mean": 37.36
+    }
+   },
+   "comparison": {
+    "a": "B0",
+    "b": "ECAPA + ArcFace",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": 12.57,
+      "ci95": [
+       9.64,
+       15.53
+      ],
+      "p_b_better": 0.0
+     },
+     "gender": {
+      "value": 9.84,
+      "ci95": [
+       6.0,
+       13.48
+      ],
+      "p_b_better": 0.0
+     },
+     "mean": {
+      "value": 11.2,
+      "ci95": [
+       8.0,
+       14.34
+      ],
+      "p_b_better": 0.0
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase2/phase3_alignment/compare_b0_vs_g3_ecapa_arcface.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "B0": {
+     "standard": [
+      17.26,
+      18.64,
+      20.55,
+      22.33,
+      22.93
+     ],
+     "gender": [
+      27.71,
+      29.86,
+      30.81,
+      33.64,
+      37.81
+     ]
+    },
+    "ECAPA + ArcFace": {
+     "standard": [
+      27.74,
+      36.14,
+      35.71,
+      35.64,
+      29.31
+     ],
+     "gender": [
+      35.74,
+      42.48,
+      42.07,
+      44.93,
+      43.81
+     ]
+    }
+   }
+  },
+  {
+   "id": "g3_cat_farl",
+   "phase": "6 Phase II diagnostics",
+   "family": "Cross-modal alignment",
+   "title": "C1 = B0 voice + ECAPA (concat) + FaRL",
+   "question": "Which factor limits cross-modal verification: encoders, heads or loss?",
+   "protocol": "local_5fold",
+   "outcome": "adopted",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "Neutral on official English; large gain on unseen languages (see holdouts).",
+   "systems": {
+    "B0": {
+     "standard": 20.34,
+     "gender": 31.97,
+     "mean": 26.15
+    },
+    "C1 = B0 voice + ECAPA (concat) + FaRL": {
+     "standard": 20.48,
+     "gender": 31.94,
+     "mean": 26.21
+    }
+   },
+   "comparison": {
+    "a": "B0",
+    "b": "C1 = B0 voice + ECAPA (concat) + FaRL",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": 0.14,
+      "ci95": [
+       -1.15,
+       1.14
+      ],
+      "p_b_better": 0.491
+     },
+     "gender": {
+      "value": -0.03,
+      "ci95": [
+       -1.74,
+       1.59
+      ],
+      "p_b_better": 0.58
+     },
+     "mean": {
+      "value": 0.05,
+      "ci95": [
+       -1.34,
+       1.25
+      ],
+      "p_b_better": 0.539
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase2/phase3_alignment/compare_b0_vs_g3_cat_farl.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "B0": {
+     "standard": [
+      17.26,
+      18.64,
+      20.55,
+      22.33,
+      22.93
+     ],
+     "gender": [
+      27.71,
+      29.86,
+      30.81,
+      33.64,
+      37.81
+     ]
+    },
+    "C1 = B0 voice + ECAPA (concat) + FaRL": {
+     "standard": [
+      17.9,
+      20.64,
+      18.79,
+      21.43,
+      23.64
+     ],
+     "gender": [
+      29.21,
+      32.69,
+      28.81,
+      31.9,
+      37.07
+     ]
+    }
+   }
+  },
+  {
+   "id": "pj_linear",
+   "phase": "6 Phase II diagnostics",
+   "family": "Cross-modal alignment",
+   "title": "Linear heads",
+   "question": "Which factor limits cross-modal verification: encoders, heads or loss?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1
+   ],
+   "interpretation": "Significantly worse (seed 1).",
+   "systems": {
+    "B0": {
+     "standard": 20.27,
+     "gender": 31.59,
+     "mean": 25.93
+    },
+    "Linear heads": {
+     "standard": 22.37,
+     "gender": 34.39,
+     "mean": 28.38
+    }
+   },
+   "comparison": {
+    "a": "B0",
+    "b": "Linear heads",
+    "seeds": [
+     1
+    ],
+    "delta": {
+     "standard": {
+      "value": 2.1,
+      "ci95": [
+       0.84,
+       3.24
+      ],
+      "p_b_better": 0.0
+     },
+     "gender": {
+      "value": 2.8,
+      "ci95": [
+       1.07,
+       4.19
+      ],
+      "p_b_better": 0.002
+     },
+     "mean": {
+      "value": 2.45,
+      "ci95": [
+       1.18,
+       3.44
+      ],
+      "p_b_better": 0.001
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase2/phase3_alignment/compare_b0_vs_pj_linear_seed1.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "B0": {
+     "standard": [
+      17.36,
+      17.57,
+      20.71,
+      23.14,
+      22.57
+     ],
+     "gender": [
+      28.36,
+      27.86,
+      30.14,
+      33.71,
+      37.86
+     ]
+    },
+    "Linear heads": {
+     "standard": [
+      18.93,
+      22.36,
+      22.71,
+      22.64,
+      25.21
+     ],
+     "gender": [
+      30.29,
+      33.29,
+      31.36,
+      36.79,
+      40.21
+     ]
+    }
+   }
+  },
+  {
+   "id": "pj_deep",
+   "phase": "6 Phase II diagnostics",
+   "family": "Cross-modal alignment",
+   "title": "Deeper heads (512-256)",
+   "question": "Which factor limits cross-modal verification: encoders, heads or loss?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1
+   ],
+   "interpretation": "Worse (seed 1).",
+   "systems": {
+    "B0": {
+     "standard": 20.27,
+     "gender": 31.59,
+     "mean": 25.93
+    },
+    "Deeper heads (512-256)": {
+     "standard": 20.69,
+     "gender": 33.33,
+     "mean": 27.01
+    }
+   },
+   "comparison": {
+    "a": "B0",
+    "b": "Deeper heads (512-256)",
+    "seeds": [
+     1
+    ],
+    "delta": {
+     "standard": {
+      "value": 0.41,
+      "ci95": [
+       -1.12,
+       2.07
+      ],
+      "p_b_better": 0.266
+     },
+     "gender": {
+      "value": 1.74,
+      "ci95": [
+       -0.4,
+       3.81
+      ],
+      "p_b_better": 0.057
+     },
+     "mean": {
+      "value": 1.08,
+      "ci95": [
+       -0.52,
+       2.79
+      ],
+      "p_b_better": 0.093
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase2/phase3_alignment/compare_b0_vs_pj_deep_seed1.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "B0": {
+     "standard": [
+      17.36,
+      17.57,
+      20.71,
+      23.14,
+      22.57
+     ],
+     "gender": [
+      28.36,
+      27.86,
+      30.14,
+      33.71,
+      37.86
+     ]
+    },
+    "Deeper heads (512-256)": {
+     "standard": [
+      17.71,
+      20.57,
+      20.79,
+      22.64,
+      21.71
+     ],
+     "gender": [
+      28.0,
+      33.86,
+      30.86,
+      34.86,
+      39.07
+     ]
+    }
+   }
+  },
+  {
+   "id": "ls_multipos",
+   "phase": "6 Phase II diagnostics",
+   "family": "Cross-modal alignment",
+   "title": "Multi-positive InfoNCE",
+   "question": "Which factor limits cross-modal verification: encoders, heads or loss?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1
+   ],
+   "interpretation": "Significantly worse (seed 1).",
+   "systems": {
+    "B0": {
+     "standard": 20.27,
+     "gender": 31.59,
+     "mean": 25.93
+    },
+    "Multi-positive InfoNCE": {
+     "standard": 21.96,
+     "gender": 31.81,
+     "mean": 26.89
+    }
+   },
+   "comparison": {
+    "a": "B0",
+    "b": "Multi-positive InfoNCE",
+    "seeds": [
+     1
+    ],
+    "delta": {
+     "standard": {
+      "value": 1.69,
+      "ci95": [
+       0.83,
+       2.51
+      ],
+      "p_b_better": 0.0
+     },
+     "gender": {
+      "value": 0.23,
+      "ci95": [
+       -0.88,
+       1.41
+      ],
+      "p_b_better": 0.303
+     },
+     "mean": {
+      "value": 0.96,
+      "ci95": [
+       0.15,
+       1.78
+      ],
+      "p_b_better": 0.01
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase2/phase3_alignment/compare_b0_vs_ls_multipos_seed1.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "B0": {
+     "standard": [
+      17.36,
+      17.57,
+      20.71,
+      23.14,
+      22.57
+     ],
+     "gender": [
+      28.36,
+      27.86,
+      30.14,
+      33.71,
+      37.86
+     ]
+    },
+    "Multi-positive InfoNCE": {
+     "standard": [
+      19.14,
+      20.07,
+      22.43,
+      23.71,
+      24.43
+     ],
+     "gender": [
+      29.29,
+      28.21,
+      30.0,
+      33.07,
+      38.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "ls_margin",
+   "phase": "6 Phase II diagnostics",
+   "family": "Cross-modal alignment",
+   "title": "+ same-gender margin ranking",
+   "question": "Which factor limits cross-modal verification: encoders, heads or loss?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1
+   ],
+   "interpretation": "No change (seed 1).",
+   "systems": {
+    "B0": {
+     "standard": 20.27,
+     "gender": 31.59,
+     "mean": 25.93
+    },
+    "+ same-gender margin ranking": {
+     "standard": 20.3,
+     "gender": 31.61,
+     "mean": 25.96
+    }
+   },
+   "comparison": {
+    "a": "B0",
+    "b": "+ same-gender margin ranking",
+    "seeds": [
+     1
+    ],
+    "delta": {
+     "standard": {
+      "value": 0.03,
+      "ci95": [
+       -0.16,
+       0.24
+      ],
+      "p_b_better": 0.347
+     },
+     "gender": {
+      "value": 0.03,
+      "ci95": [
+       -0.16,
+       0.23
+      ],
+      "p_b_better": 0.384
+     },
+     "mean": {
+      "value": 0.03,
+      "ci95": [
+       -0.1,
+       0.17
+      ],
+      "p_b_better": 0.315
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase2/phase3_alignment/compare_b0_vs_ls_margin_seed1.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "B0": {
+     "standard": [
+      17.36,
+      17.57,
+      20.71,
+      23.14,
+      22.57
+     ],
+     "gender": [
+      28.36,
+      27.86,
+      30.14,
+      33.71,
+      37.86
+     ]
+    },
+    "+ same-gender margin ranking": {
+     "standard": [
+      17.36,
+      17.57,
+      20.86,
+      23.0,
+      22.71
+     ],
+     "gender": [
+      28.36,
+      27.86,
+      30.21,
+      33.64,
+      38.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "c1_terms",
+   "phase": "6 Phase II diagnostics",
+   "family": "Scoring",
+   "title": "C1 with refitted terms (eval #5 zip, not submitted)",
+   "question": "Local estimate of C1 + terms",
+   "protocol": "local_5fold_terms",
+   "outcome": "candidate",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "25.73 vs B0 + terms 25.94.",
+   "systems": {
+    "C1 + terms": {
+     "standard": 19.94,
+     "gender": 31.52,
+     "mean": 25.73
+    },
+    "C1 (terms fitter, no terms)": {
+     "standard": 20.48,
+     "gender": 31.94,
+     "mean": 26.21
+    }
+   },
+   "term_weights": {
+    "standard_track": {
+     "w_age_per_10y": 0.05,
+     "w_gender": 0.05
+    },
+    "gender_track": {
+     "w_age_per_10y": 0.03,
+     "w_gender": 0.0
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase2/phase5_language/cat_farl_attribute_terms.json",
+     "type": "json",
+     "extract": "weights.{no_gender,gender}.cv_mean_eer[_without_terms]"
+    }
+   ]
+  },
+  {
+   "id": "urdu_holdout_phase2",
+   "phase": "6 Phase II diagnostics",
+   "family": "Unseen language",
+   "title": "Urdu holdout: B0 vs ECAPA variants",
+   "question": "Does ECAPA help a language never heard in training?",
+   "protocol": "urdu_holdout",
+   "outcome": "adopted",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "C1 beats B0 on all four cells; Urdu standard -2.06, Urdu gender -2.49.",
+   "systems": {
+    "B0": {
+     "standard_English": 24.28,
+     "standard_Urdu": 26.06,
+     "gender_English": 37.37,
+     "gender_Urdu": 38.86
+    },
+    "ECAPA + FaRL": {
+     "standard_English": 24.92,
+     "standard_Urdu": 24.58,
+     "gender_English": 38.1,
+     "gender_Urdu": 36.14
+    },
+    "C1": {
+     "standard_English": 22.96,
+     "standard_Urdu": 23.94,
+     "gender_English": 36.18,
+     "gender_Urdu": 36.32
+    },
+    "B0 + ECAPA expert (fusion)": {
+     "standard_English": 23.17,
+     "standard_Urdu": 23.65,
+     "gender_English": 36.32,
+     "gender_Urdu": 36.32
+    }
+   },
+   "deltas": {
+    "ECAPA + FaRL vs B0": {
+     "standard_English": {
+      "value": 0.64,
+      "ci95": [
+       -1.22,
+       2.54
+      ],
+      "p_b_better": 0.231
+     },
+     "standard_Urdu": {
+      "value": -1.38,
+      "ci95": [
+       -3.69,
+       1.17
+      ],
+      "p_b_better": 0.865
+     },
+     "gender_English": {
+      "value": 0.55,
+      "ci95": [
+       -2.18,
+       3.35
+      ],
+      "p_b_better": 0.353
+     },
+     "gender_Urdu": {
+      "value": -2.47,
+      "ci95": [
+       -5.86,
+       1.24
+      ],
+      "p_b_better": 0.897
+     }
+    },
+    "C1 vs B0": {
+     "standard_English": {
+      "value": -1.33,
+      "ci95": [
+       -2.35,
+       -0.42
+      ],
+      "p_b_better": 0.998
+     },
+     "standard_Urdu": {
+      "value": -2.06,
+      "ci95": [
+       -3.15,
+       -0.95
+      ],
+      "p_b_better": 1.0
+     },
+     "gender_English": {
+      "value": -1.25,
+      "ci95": [
+       -2.69,
+       0.08
+      ],
+      "p_b_better": 0.962
+     },
+     "gender_Urdu": {
+      "value": -2.49,
+      "ci95": [
+       -3.93,
+       -1.01
+      ],
+      "p_b_better": 1.0
+     }
+    },
+    "B0 + ECAPA expert (fusion) vs B0": {
+     "standard_English": {
+      "value": -1.09,
+      "ci95": [
+       -2.12,
+       -0.21
+      ],
+      "p_b_better": 0.99
+     },
+     "standard_Urdu": {
+      "value": -2.33,
+      "ci95": [
+       -3.76,
+       -0.79
+      ],
+      "p_b_better": 1.0
+     },
+     "gender_English": {
+      "value": -1.1,
+      "ci95": [
+       -2.42,
+       0.09
+      ],
+      "p_b_better": 0.965
+     },
+     "gender_Urdu": {
+      "value": -2.42,
+      "ci95": [
+       -4.41,
+       -0.27
+      ],
+      "p_b_better": 0.989
+     }
+    }
+   },
+   "languages": [
+    "English",
+    "Urdu"
+   ],
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase2/phase5_language/transfer_fusion_round2.json",
+     "type": "json",
+     "extract": "point.*, vs_b0.*"
+    }
+   ]
+  },
+  {
+   "id": "p3_k64",
+   "phase": "7 Phase III complementarity",
+   "family": "Fusion / controls",
+   "title": "C1 with ECAPA bottleneck (64)",
+   "question": "Why does ECAPA help, and is concatenation the best fusion?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "-0.42 n.s. vs C1 on English; no Urdu gain.",
+   "systems": {
+    "C1": {
+     "standard": 20.48,
+     "gender": 31.94,
+     "mean": 26.21
+    },
+    "C1 with ECAPA bottleneck (64)": {
+     "standard": 20.2,
+     "gender": 31.38,
+     "mean": 25.79
+    }
+   },
+   "comparison": {
+    "a": "C1",
+    "b": "C1 with ECAPA bottleneck (64)",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -0.28,
+      "ci95": [
+       -0.8,
+       0.37
+      ],
+      "p_b_better": 0.775
+     },
+     "gender": {
+      "value": -0.56,
+      "ci95": [
+       -1.43,
+       0.42
+      ],
+      "p_b_better": 0.854
+     },
+     "mean": {
+      "value": -0.42,
+      "ci95": [
+       -1.0,
+       0.29
+      ],
+      "p_b_better": 0.877
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase3/e2_3seeds/official_c1_vs_k64.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "C1": {
+     "standard": [
+      17.9,
+      20.64,
+      18.79,
+      21.43,
+      23.64
+     ],
+     "gender": [
+      29.21,
+      32.69,
+      28.81,
+      31.9,
+      37.07
+     ]
+    },
+    "C1 with ECAPA bottleneck (64)": {
+     "standard": [
+      18.67,
+      20.74,
+      18.17,
+      20.14,
+      23.29
+     ],
+     "gender": [
+      30.17,
+      31.64,
+      27.55,
+      30.81,
+      36.74
+     ]
+    }
+   }
+  },
+  {
+   "id": "p3_bl2",
+   "phase": "7 Phase III complementarity",
+   "family": "Fusion / controls",
+   "title": "C1 with per-block L2",
+   "question": "Why does ECAPA help, and is concatenation the best fusion?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "-0.43 n.s. vs C1 on English; Urdu tie; weaker on German.",
+   "systems": {
+    "C1": {
+     "standard": 20.48,
+     "gender": 31.94,
+     "mean": 26.21
+    },
+    "C1 with per-block L2": {
+     "standard": 20.16,
+     "gender": 31.39,
+     "mean": 25.78
+    }
+   },
+   "comparison": {
+    "a": "C1",
+    "b": "C1 with per-block L2",
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "delta": {
+     "standard": {
+      "value": -0.32,
+      "ci95": [
+       -0.98,
+       0.31
+      ],
+      "p_b_better": 0.826
+     },
+     "gender": {
+      "value": -0.55,
+      "ci95": [
+       -1.61,
+       0.66
+      ],
+      "p_b_better": 0.752
+     },
+     "mean": {
+      "value": -0.43,
+      "ci95": [
+       -1.15,
+       0.4
+      ],
+      "p_b_better": 0.805
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase3/e2_3seeds/official_c1_vs_bl2.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "C1": {
+     "standard": [
+      17.9,
+      20.64,
+      18.79,
+      21.43,
+      23.64
+     ],
+     "gender": [
+      29.21,
+      32.69,
+      28.81,
+      31.9,
+      37.07
+     ]
+    },
+    "C1 with per-block L2": {
+     "standard": [
+      18.24,
+      20.52,
+      17.6,
+      21.55,
+      22.9
+     ],
+     "gender": [
+      29.31,
+      33.45,
+      26.38,
+      31.31,
+      36.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "p3_random",
+   "phase": "7 Phase III complementarity",
+   "family": "Fusion / controls",
+   "title": "Control D: B0 + random 192-d",
+   "question": "Why does ECAPA help, and is concatenation the best fusion?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1
+   ],
+   "interpretation": "English as C1, Urdu gain lost (see Urdu screen).",
+   "systems": {
+    "C1": {
+     "standard": 20.81,
+     "gender": 32.03,
+     "mean": 26.42
+    },
+    "Control D: B0 + random 192-d": {
+     "standard": 20.6,
+     "gender": 32.27,
+     "mean": 26.44
+    }
+   },
+   "comparison": {
+    "a": "C1",
+    "b": "Control D: B0 + random 192-d",
+    "seeds": [
+     1
+    ],
+    "delta": {
+     "standard": {
+      "value": -0.21,
+      "ci95": [
+       -1.5,
+       1.14
+      ],
+      "p_b_better": 0.579
+     },
+     "gender": {
+      "value": 0.24,
+      "ci95": [
+       -1.44,
+       2.03
+      ],
+      "p_b_better": 0.364
+     },
+     "mean": {
+      "value": 0.01,
+      "ci95": [
+       -1.28,
+       1.43
+      ],
+      "p_b_better": 0.454
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase3/screen_seed1/official_c1_vs_rand.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "C1": {
+     "standard": [
+      17.64,
+      20.29,
+      19.5,
+      21.21,
+      25.43
+     ],
+     "gender": [
+      29.07,
+      31.71,
+      30.14,
+      32.0,
+      37.21
+     ]
+    },
+    "Control D: B0 + random 192-d": {
+     "standard": [
+      17.29,
+      17.86,
+      19.43,
+      23.14,
+      25.29
+     ],
+     "gender": [
+      28.29,
+      29.07,
+      31.36,
+      34.21,
+      38.43
+     ]
+    }
+   }
+  },
+  {
+   "id": "p3_shuffled",
+   "phase": "7 Phase III complementarity",
+   "family": "Fusion / controls",
+   "title": "Control E: speaker-shuffled ECAPA",
+   "question": "Why does ECAPA help, and is concatenation the best fusion?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1
+   ],
+   "interpretation": "Urdu gain lost; English worse.",
+   "systems": {
+    "C1": {
+     "standard": 20.81,
+     "gender": 32.03,
+     "mean": 26.42
+    },
+    "Control E: speaker-shuffled ECAPA": {
+     "standard": 21.24,
+     "gender": 33.66,
+     "mean": 27.45
+    }
+   },
+   "comparison": {
+    "a": "C1",
+    "b": "Control E: speaker-shuffled ECAPA",
+    "seeds": [
+     1
+    ],
+    "delta": {
+     "standard": {
+      "value": 0.43,
+      "ci95": [
+       -0.86,
+       2.21
+      ],
+      "p_b_better": 0.174
+     },
+     "gender": {
+      "value": 1.63,
+      "ci95": [
+       -0.07,
+       3.91
+      ],
+      "p_b_better": 0.03
+     },
+     "mean": {
+      "value": 1.03,
+      "ci95": [
+       -0.32,
+       2.93
+      ],
+      "p_b_better": 0.057
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase3/screen_seed1/official_c1_vs_shuf.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "C1": {
+     "standard": [
+      17.64,
+      20.29,
+      19.5,
+      21.21,
+      25.43
+     ],
+     "gender": [
+      29.07,
+      31.71,
+      30.14,
+      32.0,
+      37.21
+     ]
+    },
+    "Control E: speaker-shuffled ECAPA": {
+     "standard": [
+      17.43,
+      17.36,
+      21.71,
+      24.0,
+      25.71
+     ],
+     "gender": [
+      27.36,
+      29.21,
+      32.86,
+      36.86,
+      42.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "p3_residual",
+   "phase": "7 Phase III complementarity",
+   "family": "Fusion / controls",
+   "title": "C1 with residual ECAPA adapter",
+   "question": "Why does ECAPA help, and is concatenation the best fusion?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1
+   ],
+   "interpretation": "No gain (seed 1).",
+   "systems": {
+    "C1": {
+     "standard": 20.81,
+     "gender": 32.03,
+     "mean": 26.42
+    },
+    "C1 with residual ECAPA adapter": {
+     "standard": 20.94,
+     "gender": 32.41,
+     "mean": 26.68
+    }
+   },
+   "comparison": {
+    "a": "C1",
+    "b": "C1 with residual ECAPA adapter",
+    "seeds": [
+     1
+    ],
+    "delta": {
+     "standard": {
+      "value": 0.13,
+      "ci95": [
+       -0.87,
+       1.23
+      ],
+      "p_b_better": 0.365
+     },
+     "gender": {
+      "value": 0.39,
+      "ci95": [
+       -0.99,
+       1.91
+      ],
+      "p_b_better": 0.238
+     },
+     "mean": {
+      "value": 0.26,
+      "ci95": [
+       -0.75,
+       1.39
+      ],
+      "p_b_better": 0.247
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase3/screen_seed1/official_c1_vs_res.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "C1": {
+     "standard": [
+      17.64,
+      20.29,
+      19.5,
+      21.21,
+      25.43
+     ],
+     "gender": [
+      29.07,
+      31.71,
+      30.14,
+      32.0,
+      37.21
+     ]
+    },
+    "C1 with residual ECAPA adapter": {
+     "standard": [
+      18.29,
+      20.57,
+      18.0,
+      23.71,
+      24.14
+     ],
+     "gender": [
+      29.71,
+      32.21,
+      28.57,
+      33.07,
+      38.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "p3_k32",
+   "phase": "7 Phase III complementarity",
+   "family": "Fusion / controls",
+   "title": "C1 with ECAPA bottleneck (32)",
+   "question": "Why does ECAPA help, and is concatenation the best fusion?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1
+   ],
+   "interpretation": "Worse (seed 1).",
+   "systems": {
+    "C1": {
+     "standard": 20.81,
+     "gender": 32.03,
+     "mean": 26.42
+    },
+    "C1 with ECAPA bottleneck (32)": {
+     "standard": 21.04,
+     "gender": 32.97,
+     "mean": 27.01
+    }
+   },
+   "comparison": {
+    "a": "C1",
+    "b": "C1 with ECAPA bottleneck (32)",
+    "seeds": [
+     1
+    ],
+    "delta": {
+     "standard": {
+      "value": 0.23,
+      "ci95": [
+       -0.73,
+       1.57
+      ],
+      "p_b_better": 0.272
+     },
+     "gender": {
+      "value": 0.94,
+      "ci95": [
+       -0.97,
+       2.68
+      ],
+      "p_b_better": 0.193
+     },
+     "mean": {
+      "value": 0.59,
+      "ci95": [
+       -0.67,
+       1.8
+      ],
+      "p_b_better": 0.182
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase3/screen_seed1/official_c1_vs_k32.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "C1": {
+     "standard": [
+      17.64,
+      20.29,
+      19.5,
+      21.21,
+      25.43
+     ],
+     "gender": [
+      29.07,
+      31.71,
+      30.14,
+      32.0,
+      37.21
+     ]
+    },
+    "C1 with ECAPA bottleneck (32)": {
+     "standard": [
+      18.43,
+      20.07,
+      18.71,
+      22.93,
+      25.07
+     ],
+     "gender": [
+      30.29,
+      32.14,
+      28.57,
+      34.43,
+      39.43
+     ]
+    }
+   }
+  },
+  {
+   "id": "p3_traits0",
+   "phase": "7 Phase III complementarity",
+   "family": "Fusion / controls",
+   "title": "C1 without trait losses",
+   "question": "Why does ECAPA help, and is concatenation the best fusion?",
+   "protocol": "local_5fold",
+   "outcome": "rejected",
+   "seeds": [
+    1
+   ],
+   "interpretation": "~+0.1: trait heads add little after ECAPA (seed 1).",
+   "systems": {
+    "C1": {
+     "standard": 20.81,
+     "gender": 32.03,
+     "mean": 26.42
+    },
+    "C1 without trait losses": {
+     "standard": 21.06,
+     "gender": 32.03,
+     "mean": 26.54
+    }
+   },
+   "comparison": {
+    "a": "C1",
+    "b": "C1 without trait losses",
+    "seeds": [
+     1
+    ],
+    "delta": {
+     "standard": {
+      "value": 0.24,
+      "ci95": [
+       -0.13,
+       0.67
+      ],
+      "p_b_better": 0.092
+     },
+     "gender": {
+      "value": 0.0,
+      "ci95": [
+       -0.36,
+       0.48
+      ],
+      "p_b_better": 0.416
+     },
+     "mean": {
+      "value": 0.12,
+      "ci95": [
+       -0.13,
+       0.46
+      ],
+      "p_b_better": 0.158
+     }
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase3/screen_seed1/official_c1_vs_tr0.json",
+     "type": "json",
+     "extract": "compare_fold_runs: standard/gender/mean.{a,b,b_minus_a,ci95,p_b_better}"
+    }
+   ],
+   "per_fold": {
+    "C1": {
+     "standard": [
+      17.64,
+      20.29,
+      19.5,
+      21.21,
+      25.43
+     ],
+     "gender": [
+      29.07,
+      31.71,
+      30.14,
+      32.0,
+      37.21
+     ]
+    },
+    "C1 without trait losses": {
+     "standard": [
+      17.86,
+      20.93,
+      19.5,
+      21.57,
+      25.43
+     ],
+     "gender": [
+      28.43,
+      31.86,
+      29.79,
+      32.93,
+      37.14
+     ]
+    }
+   }
+  },
+  {
+   "id": "urdu_controls_seed1",
+   "phase": "7 Phase III complementarity",
+   "family": "Fusion / controls",
+   "title": "Urdu holdout: controls and fusion variants vs C1 (seed 1)",
+   "question": "Is C1's Urdu gain due to dimensionality, regularisation, or speaker-aligned ECAPA content?",
+   "protocol": "urdu_holdout",
+   "outcome": "diagnostic",
+   "seeds": [
+    1
+   ],
+   "interpretation": "Random and shuffled controls are significantly worse than C1 on Urdu (lose the gain); fusion variants tie.",
+   "systems": {
+    "Control D (random)": {
+     "standard_English": 24.07,
+     "standard_Urdu": 25.89,
+     "gender_English": 37.35,
+     "gender_Urdu": 38.6
+    },
+    "Control E (shuffled)": {
+     "standard_English": 24.82,
+     "standard_Urdu": 26.05,
+     "gender_English": 38.39,
+     "gender_Urdu": 39.27
+    },
+    "Bottleneck 64": {
+     "standard_English": 23.39,
+     "standard_Urdu": 24.23,
+     "gender_English": 36.59,
+     "gender_Urdu": 36.43
+    },
+    "Block L2": {
+     "standard_English": 23.39,
+     "standard_Urdu": 23.9,
+     "gender_English": 36.33,
+     "gender_Urdu": 36.02
+    },
+    "Residual adapter": {
+     "standard_English": 23.34,
+     "standard_Urdu": 23.93,
+     "gender_English": 36.89,
+     "gender_Urdu": 36.23
+    }
+   },
+   "deltas": {
+    "Control D (random) vs C1": {
+     "standard_English": {
+      "value": 1.07,
+      "ci95": [
+       0.3,
+       1.95
+      ],
+      "p_b_better": 0.004
+     },
+     "standard_Urdu": {
+      "value": 1.81,
+      "ci95": [
+       0.84,
+       2.74
+      ],
+      "p_b_better": 0.0
+     },
+     "gender_English": {
+      "value": 0.83,
+      "ci95": [
+       -0.51,
+       2.14
+      ],
+      "p_b_better": 0.12
+     },
+     "gender_Urdu": {
+      "value": 2.07,
+      "ci95": [
+       0.54,
+       3.53
+      ],
+      "p_b_better": 0.0
+     }
+    },
+    "Control E (shuffled) vs C1": {
+     "standard_English": {
+      "value": 1.86,
+      "ci95": [
+       0.92,
+       3.08
+      ],
+      "p_b_better": 0.0
+     },
+     "standard_Urdu": {
+      "value": 1.96,
+      "ci95": [
+       0.42,
+       3.31
+      ],
+      "p_b_better": 0.0
+     },
+     "gender_English": {
+      "value": 1.86,
+      "ci95": [
+       0.53,
+       3.58
+      ],
+      "p_b_better": 0.004
+     },
+     "gender_Urdu": {
+      "value": 2.77,
+      "ci95": [
+       0.78,
+       4.78
+      ],
+      "p_b_better": 0.002
+     }
+    },
+    "Bottleneck 64 vs C1": {
+     "standard_English": {
+      "value": 0.37,
+      "ci95": [
+       -0.2,
+       0.94
+      ],
+      "p_b_better": 0.104
+     },
+     "standard_Urdu": {
+      "value": 0.12,
+      "ci95": [
+       -0.53,
+       0.78
+      ],
+      "p_b_better": 0.334
+     },
+     "gender_English": {
+      "value": -0.05,
+      "ci95": [
+       -1.02,
+       0.92
+      ],
+      "p_b_better": 0.548
+     },
+     "gender_Urdu": {
+      "value": -0.03,
+      "ci95": [
+       -1.12,
+       0.93
+      ],
+      "p_b_better": 0.534
+     }
+    },
+    "Block L2 vs C1": {
+     "standard_English": {
+      "value": 0.32,
+      "ci95": [
+       -0.56,
+       1.17
+      ],
+      "p_b_better": 0.228
+     },
+     "standard_Urdu": {
+      "value": -0.17,
+      "ci95": [
+       -1.02,
+       0.66
+      ],
+      "p_b_better": 0.668
+     },
+     "gender_English": {
+      "value": -0.2,
+      "ci95": [
+       -1.55,
+       1.06
+      ],
+      "p_b_better": 0.616
+     },
+     "gender_Urdu": {
+      "value": -0.41,
+      "ci95": [
+       -1.57,
+       0.73
+      ],
+      "p_b_better": 0.764
+     }
+    },
+    "Residual adapter vs C1": {
+     "standard_English": {
+      "value": 0.26,
+      "ci95": [
+       -0.34,
+       0.91
+      ],
+      "p_b_better": 0.194
+     },
+     "standard_Urdu": {
+      "value": -0.19,
+      "ci95": [
+       -1.09,
+       0.69
+      ],
+      "p_b_better": 0.666
+     },
+     "gender_English": {
+      "value": 0.27,
+      "ci95": [
+       -0.66,
+       1.24
+      ],
+      "p_b_better": 0.264
+     },
+     "gender_Urdu": {
+      "value": -0.21,
+      "ci95": [
+       -1.37,
+       0.9
+      ],
+      "p_b_better": 0.636
+     }
+    }
+   },
+   "languages": [
+    "English",
+    "Urdu"
+   ],
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase3/screen_seed1/p2_vs_c1.json",
+     "type": "json",
+     "extract": "point.*, vs_b0.*"
+    }
+   ]
+  },
+  {
+   "id": "german_holdout",
+   "phase": "7 Phase III complementarity",
+   "family": "Unseen language",
+   "title": "German holdout confirmation",
+   "question": "Does C1's gain extend beyond Urdu?",
+   "protocol": "german_holdout",
+   "outcome": "adopted",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "German gender -2.35 [-4.38, -0.30] vs B0; candidates frozen before this test.",
+   "systems": {
+    "B0": {
+     "standard_English": 28.62,
+     "standard_German": 30.37,
+     "gender_English": 39.1,
+     "gender_German": 42.14
+    },
+    "C1": {
+     "standard_English": 28.48,
+     "standard_German": 28.99,
+     "gender_English": 38.23,
+     "gender_German": 39.73
+    },
+    "C1 block L2": {
+     "standard_English": 28.42,
+     "standard_German": 29.44,
+     "gender_English": 38.96,
+     "gender_German": 40.1
+    }
+   },
+   "deltas": {
+    "C1 vs B0": {
+     "standard_English": {
+      "value": -0.52,
+      "ci95": [
+       -1.7,
+       0.68
+      ],
+      "p_b_better": 0.796
+     },
+     "standard_German": {
+      "value": -1.19,
+      "ci95": [
+       -2.32,
+       0.09
+      ],
+      "p_b_better": 0.97
+     },
+     "gender_English": {
+      "value": -1.15,
+      "ci95": [
+       -3.05,
+       0.63
+      ],
+      "p_b_better": 0.882
+     },
+     "gender_German": {
+      "value": -2.35,
+      "ci95": [
+       -4.38,
+       -0.3
+      ],
+      "p_b_better": 0.99
+     }
+    },
+    "C1 block L2 vs B0": {
+     "standard_English": {
+      "value": -0.34,
+      "ci95": [
+       -1.66,
+       0.92
+      ],
+      "p_b_better": 0.687
+     },
+     "standard_German": {
+      "value": -0.85,
+      "ci95": [
+       -2.18,
+       0.62
+      ],
+      "p_b_better": 0.888
+     },
+     "gender_English": {
+      "value": -0.5,
+      "ci95": [
+       -2.52,
+       1.45
+      ],
+      "p_b_better": 0.676
+     },
+     "gender_German": {
+      "value": -1.74,
+      "ci95": [
+       -4.07,
+       0.49
+      ],
+      "p_b_better": 0.944
+     }
+    }
+   },
+   "languages": [
+    "English",
+    "German"
+   ],
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase3/e3_german/p3_vs_b0.json",
+     "type": "json",
+     "extract": "point.*, vs_b0.*"
+    }
+   ]
+  },
+  {
+   "id": "seed_ensembles_holdouts",
+   "phase": "7 Phase III complementarity",
+   "family": "Ensemble",
+   "title": "Seed ensembles on Urdu and German holdouts",
+   "question": "Does a 3-seed C1 ensemble add robustness on unseen languages?",
+   "protocol": "urdu_holdout",
+   "outcome": "adopted",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "systems_urdu": {
+    "C1": {
+     "standard_English": 22.96,
+     "standard_Urdu": 23.94,
+     "gender_English": 36.18,
+     "gender_Urdu": 36.32
+    },
+    "C1 x 3": {
+     "standard_English": 22.66,
+     "standard_Urdu": 23.62,
+     "gender_English": 35.94,
+     "gender_Urdu": 35.88
+    },
+    "B0": {
+     "standard_English": 24.28,
+     "standard_Urdu": 26.06,
+     "gender_English": 37.37,
+     "gender_Urdu": 38.86
+    },
+    "B0 x 3": {
+     "standard_English": 24.08,
+     "standard_Urdu": 25.87,
+     "gender_English": 37.28,
+     "gender_Urdu": 38.7
+    }
+   },
+   "systems_german": {
+    "C1": {
+     "standard_English": 28.48,
+     "standard_German": 28.99,
+     "gender_English": 38.23,
+     "gender_German": 39.73
+    },
+    "C1 x 3": {
+     "standard_English": 28.12,
+     "standard_German": 28.85,
+     "gender_English": 37.8,
+     "gender_German": 39.38
+    },
+    "B0": {
+     "standard_English": 28.62,
+     "standard_German": 30.37,
+     "gender_English": 39.1,
+     "gender_German": 42.14
+    },
+    "B0 x 3": {
+     "standard_English": 28.36,
+     "standard_German": 30.07,
+     "gender_English": 39.25,
+     "gender_German": 42.23
+    }
+   },
+   "ensemble_vs_single": {
+    "urdu_C1x3": {
+     "standard_English": {
+      "value": -0.29,
+      "ci95": [
+       -0.48,
+       -0.1
+      ]
+     },
+     "standard_Urdu": {
+      "value": -0.33,
+      "ci95": [
+       -0.47,
+       -0.19
+      ]
+     },
+     "gender_English": {
+      "value": -0.21,
+      "ci95": [
+       -0.46,
+       0.04
+      ]
+     },
+     "gender_Urdu": {
+      "value": -0.38,
+      "ci95": [
+       -0.57,
+       -0.17
+      ]
+     }
+    },
+    "german_C1x3": {
+     "standard_English": {
+      "value": -0.21,
+      "ci95": [
+       -0.65,
+       0.18
+      ]
+     },
+     "standard_German": {
+      "value": -0.23,
+      "ci95": [
+       -0.69,
+       0.29
+      ]
+     },
+     "gender_English": {
+      "value": -0.31,
+      "ci95": [
+       -0.8,
+       0.23
+      ]
+     },
+     "gender_German": {
+      "value": -0.25,
+      "ci95": [
+       -0.8,
+       0.34
+      ]
+     }
+    }
+   },
+   "interpretation": "Urdu -0.33 / -0.38 (significant); German -0.2 (n.s.). German rows use protocol german_holdout.",
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase3/e6_stabilization/p2_seed_ensembles.json",
+     "type": "json"
+    },
+    {
+     "path": "public_results/sources/results/phase3/e3_german/p3_seed_ensembles.json",
+     "type": "json"
+    }
+   ]
+  },
+  {
+   "id": "seed_ensemble_official",
+   "phase": "7 Phase III complementarity",
+   "family": "Ensemble",
+   "title": "C1 seed ensemble on official folds",
+   "question": "Does seed ensembling stabilise C1?",
+   "protocol": "local_5fold",
+   "outcome": "adopted",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "systems": {
+    "C1": {
+     "standard": 20.48,
+     "gender": 31.94,
+     "mean": 26.21
+    },
+    "C1 x 2": {
+     "standard": 20.03,
+     "gender": 31.36,
+     "mean": 25.7
+    },
+    "C1 x 3": {
+     "standard": 19.91,
+     "gender": 31.19,
+     "mean": 25.55
+    },
+    "C1 + B0 fusion": {
+     "standard": 19.96,
+     "gender": 31.22,
+     "mean": 25.59
+    }
+   },
+   "comparison": {
+    "a": "C1",
+    "b": "C1 x 3",
+    "delta": {
+     "mean": {
+      "value": -0.66,
+      "ci95": [
+       -0.86,
+       -0.12
+      ],
+      "p_b_better": 0.989
+     }
+    }
+   },
+   "interpretation": "C1 x 3 is -0.66 vs single C1 (significant). Mixing B0 back in does not beat a same-size C1 ensemble.",
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase3/e6_stabilization/official_c1_ensembles_and_fusion.json",
+     "type": "json"
+    }
+   ]
+  },
+  {
+   "id": "final_c1x3_terms",
+   "phase": "8 Final system",
+   "family": "Final",
+   "title": "Final system: C1 x 3 + ensemble-fitted terms (eval #6 zip, not submitted)",
+   "question": "Local estimate of the final system",
+   "protocol": "local_5fold_terms",
+   "outcome": "candidate",
+   "seeds": [
+    1,
+    2,
+    3
+   ],
+   "interpretation": "25.32 local mean (C1 + terms 25.73, B0 + terms 25.94). No CodaBench score exists for this system.",
+   "systems": {
+    "C1 x 3 (raw-mean ensemble) + terms": {
+     "standard": 19.63,
+     "gender": 31.01,
+     "mean": 25.32
+    },
+    "C1 x 3 (raw-mean ensemble) (terms fitter, no terms)": {
+     "standard": 19.94,
+     "gender": 31.2,
+     "mean": 25.57
+    }
+   },
+   "term_weights": {
+    "standard_track": {
+     "w_age_per_10y": 0.02,
+     "w_gender": 0.05
+    },
+    "gender_track": {
+     "w_age_per_10y": 0.02,
+     "w_gender": 0.0
+    }
+   },
+   "sources": [
+    {
+     "path": "public_results/sources/results/phase3/e6_stabilization/c1x3_attribute_terms.json",
+     "type": "json",
+     "extract": "weights.{no_gender,gender}.cv_mean_eer[_without_terms]"
+    }
+   ]
+  }
+ ],
+ "score_histograms": {
+  "system": "B0",
+  "protocol": "local_5fold",
+  "score_type": "raw cosine (higher = more similar)",
+  "pooled_over": "5 folds x 3 seeds",
+  "source": "public_results/sources/results/gamp_vf/stage_C_final/diagnostics_3seeds.json",
+  "tracks": {
+   "standard": {
+    "bins": [
+     -1.0,
+     -0.975,
+     -0.95,
+     -0.925,
+     -0.9,
+     -0.875,
+     -0.85,
+     -0.825,
+     -0.8,
+     -0.775,
+     -0.75,
+     -0.725,
+     -0.7,
+     -0.675,
+     -0.6499999999999999,
+     -0.625,
+     -0.6,
+     -0.575,
+     -0.55,
+     -0.5249999999999999,
+     -0.5,
+     -0.475,
+     -0.44999999999999996,
+     -0.42499999999999993,
+     -0.3999999999999999,
+     -0.375,
+     -0.35,
+     -0.32499999999999996,
+     -0.29999999999999993,
+     -0.2749999999999999,
+     -0.25,
+     -0.22499999999999998,
+     -0.19999999999999996,
+     -0.17499999999999993,
+     -0.1499999999999999,
+     -0.125,
+     -0.09999999999999998,
+     -0.07499999999999996,
+     -0.04999999999999993,
+     -0.02499999999999991,
+     0.0,
+     0.025000000000000133,
+     0.050000000000000044,
+     0.07499999999999996,
+     0.10000000000000009,
+     0.125,
+     0.15000000000000013,
+     0.17500000000000004,
+     0.20000000000000018,
+     0.2250000000000001,
+     0.25,
+     0.27500000000000013,
+     0.30000000000000004,
+     0.3250000000000002,
+     0.3500000000000001,
+     0.375,
+     0.40000000000000013,
+     0.42500000000000004,
+     0.4500000000000002,
+     0.4750000000000001,
+     0.5,
+     0.5250000000000001,
+     0.55,
+     0.5750000000000002,
+     0.6000000000000001,
+     0.625,
+     0.6500000000000001,
+     0.675,
+     0.7000000000000002,
+     0.7250000000000001,
+     0.75,
+     0.7750000000000001,
+     0.8,
+     0.8250000000000002,
+     0.8500000000000001,
+     0.875,
+     0.9000000000000001,
+     0.925,
+     0.9500000000000002,
+     0.9750000000000001,
+     1.0
+    ],
+    "genuine": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     3,
+     3,
+     1,
+     5,
+     4,
+     3,
+     3,
+     3,
+     4,
+     15,
+     12,
+     12,
+     33,
+     39,
+     58,
+     60,
+     113,
+     174,
+     187,
+     313,
+     311,
+     351,
+     514,
+     656,
+     695,
+     870,
+     1014,
+     1084,
+     1038,
+     874,
+     780,
+     558,
+     408,
+     225,
+     66,
+     9,
+     0,
+     0,
+     0
+    ],
+    "impostor": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     1,
+     3,
+     4,
+     8,
+     20,
+     29,
+     35,
+     43,
+     55,
+     82,
+     89,
+     88,
+     100,
+     125,
+     135,
+     164,
+     198,
+     207,
+     254,
+     284,
+     273,
+     312,
+     331,
+     343,
+     390,
+     385,
+     391,
+     390,
+     374,
+     376,
+     350,
+     300,
+     267,
+     286,
+     293,
+     275,
+     266,
+     286,
+     302,
+     307,
+     294,
+     301,
+     264,
+     261,
+     270,
+     210,
+     189,
+     129,
+     94,
+     46,
+     15,
+     3,
+     2,
+     0,
+     0,
+     0
+    ],
+    "eer": 20.34
+   },
+   "gender": {
+    "bins": [
+     -1.0,
+     -0.975,
+     -0.95,
+     -0.925,
+     -0.9,
+     -0.875,
+     -0.85,
+     -0.825,
+     -0.8,
+     -0.775,
+     -0.75,
+     -0.725,
+     -0.7,
+     -0.675,
+     -0.6499999999999999,
+     -0.625,
+     -0.6,
+     -0.575,
+     -0.55,
+     -0.5249999999999999,
+     -0.5,
+     -0.475,
+     -0.44999999999999996,
+     -0.42499999999999993,
+     -0.3999999999999999,
+     -0.375,
+     -0.35,
+     -0.32499999999999996,
+     -0.29999999999999993,
+     -0.2749999999999999,
+     -0.25,
+     -0.22499999999999998,
+     -0.19999999999999996,
+     -0.17499999999999993,
+     -0.1499999999999999,
+     -0.125,
+     -0.09999999999999998,
+     -0.07499999999999996,
+     -0.04999999999999993,
+     -0.02499999999999991,
+     0.0,
+     0.025000000000000133,
+     0.050000000000000044,
+     0.07499999999999996,
+     0.10000000000000009,
+     0.125,
+     0.15000000000000013,
+     0.17500000000000004,
+     0.20000000000000018,
+     0.2250000000000001,
+     0.25,
+     0.27500000000000013,
+     0.30000000000000004,
+     0.3250000000000002,
+     0.3500000000000001,
+     0.375,
+     0.40000000000000013,
+     0.42500000000000004,
+     0.4500000000000002,
+     0.4750000000000001,
+     0.5,
+     0.5250000000000001,
+     0.55,
+     0.5750000000000002,
+     0.6000000000000001,
+     0.625,
+     0.6500000000000001,
+     0.675,
+     0.7000000000000002,
+     0.7250000000000001,
+     0.75,
+     0.7750000000000001,
+     0.8,
+     0.8250000000000002,
+     0.8500000000000001,
+     0.875,
+     0.9000000000000001,
+     0.925,
+     0.9500000000000002,
+     0.9750000000000001,
+     1.0
+    ],
+    "genuine": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     3,
+     3,
+     1,
+     5,
+     4,
+     3,
+     3,
+     3,
+     4,
+     15,
+     12,
+     12,
+     33,
+     39,
+     58,
+     60,
+     113,
+     174,
+     187,
+     313,
+     311,
+     351,
+     514,
+     656,
+     695,
+     870,
+     1014,
+     1084,
+     1038,
+     874,
+     780,
+     558,
+     408,
+     225,
+     66,
+     9,
+     0,
+     0,
+     0
+    ],
+    "impostor": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     2,
+     3,
+     7,
+     10,
+     18,
+     24,
+     32,
+     32,
+     41,
+     66,
+     83,
+     86,
+     118,
+     160,
+     155,
+     174,
+     246,
+     259,
+     302,
+     291,
+     390,
+     399,
+     458,
+     449,
+     542,
+     526,
+     607,
+     606,
+     632,
+     598,
+     556,
+     560,
+     523,
+     463,
+     398,
+     320,
+     224,
+     92,
+     38,
+     8,
+     1,
+     0,
+     0,
+     0
+    ],
+    "eer": 31.97
+   }
+  }
+ }
+}

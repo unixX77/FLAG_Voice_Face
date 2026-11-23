@@ -1,0 +1,19 @@
+# data, features, checkpoints and outputs are never committed
+train_set/
+dev_set/
+evaluation_phase/
+external_data/
+features/
+checkpoints/
+submissions/
+runs/
+models/
+*.pth
+*.pth.tar
+*.zip
+__pycache__/
+*.pyc
+site/node_modules/
+site/dist/
+site/src/data/experiments.json
+npm_install.log

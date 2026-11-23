@@ -1,0 +1,10 @@
+# Lightweight CPU environment for CI and the smoke tests (no data, no GPU).
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.6.0
+numpy==2.2.6
+pandas==2.3.3
+scipy==1.15.3
+scikit-learn==1.7.2
+matplotlib==3.10.9
+soundfile==0.14.0
+pytest==8.3.3

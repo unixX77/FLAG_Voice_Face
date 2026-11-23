@@ -1,0 +1,71 @@
+{
+  "run_a": "runs/traits/full/fold_{fold}_seed_{seed}/checkpoint_last.pth.tar",
+  "run_b": "runs/gamp_vf/b3_sgn100/fold_{fold}_seed_{seed}/checkpoint_last.pth.tar",
+  "seeds": [
+    1
+  ],
+  "standard": {
+    "a": 0.2027,
+    "b": 0.2054,
+    "b_minus_a": 0.0027,
+    "ci95": [
+      -0.0041,
+      0.0093
+    ],
+    "p_b_better": 0.233
+  },
+  "gender": {
+    "a": 0.3159,
+    "b": 0.3193,
+    "b_minus_a": 0.0034,
+    "ci95": [
+      -0.0116,
+      0.0112
+    ],
+    "p_b_better": 0.398
+  },
+  "mean": {
+    "a": 0.2593,
+    "b": 0.2624,
+    "b_minus_a": 0.0031,
+    "ci95": [
+      -0.0052,
+      0.0082
+    ],
+    "p_b_better": 0.301
+  },
+  "per_fold_eer": {
+    "a": {
+      "standard": [
+        0.1736,
+        0.1757,
+        0.2071,
+        0.2314,
+        0.2257
+      ],
+      "gender": [
+        0.2836,
+        0.2786,
+        0.3014,
+        0.3371,
+        0.3786
+      ]
+    },
+    "b": {
+      "standard": [
+        0.1757,
+        0.1821,
+        0.21,
+        0.2243,
+        0.235
+      ],
+      "gender": [
+        0.285,
+        0.29,
+        0.3136,
+        0.3486,
+        0.3593
+      ]
+    }
+  }
+}

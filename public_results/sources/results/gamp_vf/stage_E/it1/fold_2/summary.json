@@ -1,0 +1,538 @@
+{
+ "fold": 2,
+ "teacher": "runs/gamp_vf/sim_teacher/fold_2_seed_1/checkpoint_last.pth.tar",
+ "iteration": "it1",
+ "target_precision": 0.9,
+ "thresholds": {
+  "voice_cluster_distance": 0.2,
+  "face_cluster_space": "raw",
+  "face_cluster_distance": 0.3500000000000001,
+  "confidence_high": 0.4830479312259936,
+  "confidence_low": 0.4830479312259936,
+  "hungarian_min_score": 0.8,
+  "sinkhorn_temperature_dustbin": [
+   0.05,
+   0.8
+  ]
+ },
+ "calibration_top1_accuracy": 0.25510204081632654,
+ "clustering": {
+  "C_voice": {
+   "ari": 0.399697210079274,
+   "nmi": 0.7117544264550684,
+   "coverage": 0.979271483195814,
+   "clusters": 98,
+   "true_identities": 39,
+   "purity": 0.6465269214960954,
+   "fragmentation_mean_clusters_per_identity": 7.0,
+   "identities_without_cluster": 0
+  },
+  "C_face": {
+   "ari": 0.7566932882204529,
+   "nmi": 0.9211077716638995,
+   "coverage": 0.9973837794324814,
+   "clusters": 62,
+   "true_identities": 39,
+   "purity": 0.8769168684422922,
+   "fragmentation_mean_clusters_per_identity": 2.3333333333333335,
+   "identities_without_cluster": 0
+  },
+  "H_voice": {
+   "ari": 0.2621843799219654,
+   "nmi": 0.6792290521900013,
+   "coverage": 0.9883986306580449,
+   "clusters": 165,
+   "true_identities": 77,
+   "purity": 0.5068308639599769,
+   "fragmentation_mean_clusters_per_identity": 7.584415584415584,
+   "identities_without_cluster": 0
+  },
+  "H_face": {
+   "ari": 0.5143475180164666,
+   "nmi": 0.8615344147053515,
+   "coverage": 0.9972422974515025,
+   "clusters": 115,
+   "true_identities": 77,
+   "purity": 0.7275674644798322,
+   "fragmentation_mean_clusters_per_identity": 3.090909090909091,
+   "identities_without_cluster": 0
+  }
+ },
+ "recovery": {
+  "C": {
+   "local": {
+    "accepted_pairs": 2,
+    "correct_pairs": 2,
+    "pair_precision": 1.0,
+    "row_precision": 0.33,
+    "pseudo_rows": 200,
+    "identity_recall": 0.05128205128205128,
+    "voice_row_coverage": 0.08271281948078084,
+    "unmatched_voice_groups": 96,
+    "voice_groups": 98,
+    "face_groups": 62,
+    "errors_by_group": {
+     "gender_m": {
+      "accepted": 1,
+      "errors": 0
+     },
+     "language_English": {
+      "accepted": 1,
+      "errors": 0
+     },
+     "gender_f": {
+      "accepted": 1,
+      "errors": 0
+     },
+     "language_Mixed": {
+      "accepted": 1,
+      "errors": 0
+     }
+    }
+   },
+   "hungarian": {
+    "accepted_pairs": 36,
+    "correct_pairs": 11,
+    "pair_precision": 0.3055555555555556,
+    "row_precision": 0.3172891798228725,
+    "pseudo_rows": 2597,
+    "identity_recall": 0.28205128205128205,
+    "voice_row_coverage": 0.6353391024350976,
+    "unmatched_voice_groups": 62,
+    "voice_groups": 98,
+    "face_groups": 62,
+    "errors_by_group": {
+     "gender_f": {
+      "accepted": 11,
+      "errors": 6
+     },
+     "language_English": {
+      "accepted": 12,
+      "errors": 8
+     },
+     "gender_m": {
+      "accepted": 25,
+      "errors": 19
+     },
+     "language_Mixed": {
+      "accepted": 18,
+      "errors": 15
+     },
+     "language_German": {
+      "accepted": 1,
+      "errors": 0
+     },
+     "language_Urdu": {
+      "accepted": 5,
+      "errors": 2
+     }
+    }
+   },
+   "sinkhorn": {
+    "accepted_pairs": 0,
+    "correct_pairs": 0,
+    "pair_precision": NaN,
+    "row_precision": NaN,
+    "pseudo_rows": 0,
+    "identity_recall": 0.0,
+    "voice_row_coverage": 0.0,
+    "unmatched_voice_groups": 98,
+    "voice_groups": 98,
+    "face_groups": 62,
+    "errors_by_group": {}
+   },
+   "local_plus_hungarian": {
+    "accepted_pairs": 2,
+    "correct_pairs": 2,
+    "pair_precision": 1.0,
+    "row_precision": 0.33,
+    "pseudo_rows": 200,
+    "identity_recall": 0.05128205128205128,
+    "voice_row_coverage": 0.08271281948078084,
+    "unmatched_voice_groups": 96,
+    "voice_groups": 98,
+    "face_groups": 62,
+    "errors_by_group": {
+     "gender_m": {
+      "accepted": 1,
+      "errors": 0
+     },
+     "language_English": {
+      "accepted": 1,
+      "errors": 0
+     },
+     "gender_f": {
+      "accepted": 1,
+      "errors": 0
+     },
+     "language_Mixed": {
+      "accepted": 1,
+      "errors": 0
+     }
+    }
+   },
+   "pairwise_top1": {
+    "accepted_pairs": 98,
+    "correct_pairs": 25,
+    "pair_precision": 0.25510204081632654,
+    "row_precision": 0.2826115922718188,
+    "pseudo_rows": 7505,
+    "identity_recall": 0.3333333333333333,
+    "voice_row_coverage": 0.979271483195814,
+    "unmatched_voice_groups": 0,
+    "voice_groups": 98,
+    "face_groups": 62,
+    "errors_by_group": {
+     "gender_f": {
+      "accepted": 26,
+      "errors": 14
+     },
+     "language_English": {
+      "accepted": 33,
+      "errors": 21
+     },
+     "language_German": {
+      "accepted": 7,
+      "errors": 5
+     },
+     "gender_m": {
+      "accepted": 72,
+      "errors": 59
+     },
+     "language_Mixed": {
+      "accepted": 36,
+      "errors": 31
+     },
+     "language_Urdu": {
+      "accepted": 22,
+      "errors": 16
+     }
+    }
+   }
+  },
+  "H": {
+   "local": {
+    "accepted_pairs": 6,
+    "correct_pairs": 0,
+    "pair_precision": 0.0,
+    "row_precision": 0.12666666666666668,
+    "pseudo_rows": 600,
+    "identity_recall": 0.0,
+    "voice_row_coverage": 0.3406238113351084,
+    "unmatched_voice_groups": 159,
+    "voice_groups": 165,
+    "face_groups": 115,
+    "errors_by_group": {
+     "gender_f": {
+      "accepted": 3,
+      "errors": 3
+     },
+     "language_Urdu": {
+      "accepted": 4,
+      "errors": 4
+     },
+     "language_Mixed": {
+      "accepted": 1,
+      "errors": 1
+     },
+     "gender_m": {
+      "accepted": 3,
+      "errors": 3
+     },
+     "language_English": {
+      "accepted": 1,
+      "errors": 1
+     }
+    }
+   },
+   "hungarian": {
+    "accepted_pairs": 59,
+    "correct_pairs": 10,
+    "pair_precision": 0.1694915254237288,
+    "row_precision": 0.173841059602649,
+    "pseudo_rows": 3624,
+    "identity_recall": 0.12987012987012986,
+    "voice_row_coverage": 0.6673640167364017,
+    "unmatched_voice_groups": 106,
+    "voice_groups": 165,
+    "face_groups": 115,
+    "errors_by_group": {
+     "gender_m": {
+      "accepted": 42,
+      "errors": 35
+     },
+     "language_Urdu": {
+      "accepted": 11,
+      "errors": 9
+     },
+     "language_English": {
+      "accepted": 26,
+      "errors": 21
+     },
+     "gender_f": {
+      "accepted": 17,
+      "errors": 14
+     },
+     "language_Mixed": {
+      "accepted": 16,
+      "errors": 13
+     },
+     "language_German": {
+      "accepted": 6,
+      "errors": 6
+     }
+    }
+   },
+   "sinkhorn": {
+    "accepted_pairs": 0,
+    "correct_pairs": 0,
+    "pair_precision": NaN,
+    "row_precision": NaN,
+    "pseudo_rows": 0,
+    "identity_recall": 0.0,
+    "voice_row_coverage": 0.0,
+    "unmatched_voice_groups": 165,
+    "voice_groups": 165,
+    "face_groups": 115,
+    "errors_by_group": {}
+   },
+   "local_plus_hungarian": {
+    "accepted_pairs": 6,
+    "correct_pairs": 0,
+    "pair_precision": 0.0,
+    "row_precision": 0.12666666666666668,
+    "pseudo_rows": 600,
+    "identity_recall": 0.0,
+    "voice_row_coverage": 0.3406238113351084,
+    "unmatched_voice_groups": 159,
+    "voice_groups": 165,
+    "face_groups": 115,
+    "errors_by_group": {
+     "gender_f": {
+      "accepted": 3,
+      "errors": 3
+     },
+     "language_Urdu": {
+      "accepted": 4,
+      "errors": 4
+     },
+     "language_Mixed": {
+      "accepted": 1,
+      "errors": 1
+     },
+     "gender_m": {
+      "accepted": 3,
+      "errors": 3
+     },
+     "language_English": {
+      "accepted": 1,
+      "errors": 1
+     }
+    }
+   },
+   "pairwise_top1": {
+    "accepted_pairs": 165,
+    "correct_pairs": 24,
+    "pair_precision": 0.14545454545454545,
+    "row_precision": 0.12572490706319703,
+    "pseudo_rows": 13450,
+    "identity_recall": 0.15584415584415584,
+    "voice_row_coverage": 0.9883986306580449,
+    "unmatched_voice_groups": 0,
+    "voice_groups": 165,
+    "face_groups": 115,
+    "errors_by_group": {
+     "gender_m": {
+      "accepted": 115,
+      "errors": 98
+     },
+     "language_Urdu": {
+      "accepted": 54,
+      "errors": 42
+     },
+     "language_English": {
+      "accepted": 58,
+      "errors": 52
+     },
+     "language_Mixed": {
+      "accepted": 36,
+      "errors": 32
+     },
+     "gender_f": {
+      "accepted": 50,
+      "errors": 43
+     },
+     "language_German": {
+      "accepted": 17,
+      "errors": 15
+     }
+    }
+   }
+  },
+  "H_with_30pct_faces_missing": {
+   "local": {
+    "accepted_pairs": 7,
+    "correct_pairs": 1,
+    "pair_precision": 0.14285714285714285,
+    "row_precision": 0.15579710144927536,
+    "pseudo_rows": 552,
+    "identity_recall": 0.012987012987012988,
+    "voice_row_coverage": 0.303537466717383,
+    "unmatched_voice_groups": 158,
+    "voice_groups": 165,
+    "face_groups": 80,
+    "errors_by_group": {
+     "gender_f": {
+      "accepted": 3,
+      "errors": 2
+     },
+     "language_Urdu": {
+      "accepted": 4,
+      "errors": 3
+     },
+     "language_Mixed": {
+      "accepted": 2,
+      "errors": 2
+     },
+     "gender_m": {
+      "accepted": 4,
+      "errors": 4
+     },
+     "language_English": {
+      "accepted": 1,
+      "errors": 1
+     }
+    }
+   },
+   "hungarian": {
+    "accepted_pairs": 45,
+    "correct_pairs": 8,
+    "pair_precision": 0.17777777777777778,
+    "row_precision": 0.1676076217360621,
+    "pseudo_rows": 2834,
+    "identity_recall": 0.1038961038961039,
+    "voice_row_coverage": 0.5613351084062381,
+    "unmatched_voice_groups": 120,
+    "voice_groups": 165,
+    "face_groups": 80,
+    "errors_by_group": {
+     "gender_m": {
+      "accepted": 33,
+      "errors": 29
+     },
+     "language_English": {
+      "accepted": 20,
+      "errors": 18
+     },
+     "gender_f": {
+      "accepted": 12,
+      "errors": 8
+     },
+     "language_Urdu": {
+      "accepted": 7,
+      "errors": 4
+     },
+     "language_Mixed": {
+      "accepted": 15,
+      "errors": 12
+     },
+     "language_German": {
+      "accepted": 3,
+      "errors": 3
+     }
+    }
+   },
+   "sinkhorn": {
+    "accepted_pairs": 0,
+    "correct_pairs": 0,
+    "pair_precision": NaN,
+    "row_precision": NaN,
+    "pseudo_rows": 0,
+    "identity_recall": 0.0,
+    "voice_row_coverage": 0.0,
+    "unmatched_voice_groups": 165,
+    "voice_groups": 165,
+    "face_groups": 80,
+    "errors_by_group": {}
+   },
+   "local_plus_hungarian": {
+    "accepted_pairs": 7,
+    "correct_pairs": 1,
+    "pair_precision": 0.14285714285714285,
+    "row_precision": 0.15579710144927536,
+    "pseudo_rows": 552,
+    "identity_recall": 0.012987012987012988,
+    "voice_row_coverage": 0.303537466717383,
+    "unmatched_voice_groups": 158,
+    "voice_groups": 165,
+    "face_groups": 80,
+    "errors_by_group": {
+     "gender_f": {
+      "accepted": 3,
+      "errors": 2
+     },
+     "language_Urdu": {
+      "accepted": 4,
+      "errors": 3
+     },
+     "language_Mixed": {
+      "accepted": 2,
+      "errors": 2
+     },
+     "gender_m": {
+      "accepted": 4,
+      "errors": 4
+     },
+     "language_English": {
+      "accepted": 1,
+      "errors": 1
+     }
+    }
+   },
+   "pairwise_top1": {
+    "accepted_pairs": 165,
+    "correct_pairs": 30,
+    "pair_precision": 0.18181818181818182,
+    "row_precision": 0.13371445541614077,
+    "pseudo_rows": 13469,
+    "identity_recall": 0.19480519480519481,
+    "voice_row_coverage": 0.9883986306580449,
+    "unmatched_voice_groups": 0,
+    "voice_groups": 165,
+    "face_groups": 80,
+    "errors_by_group": {
+     "gender_m": {
+      "accepted": 115,
+      "errors": 95
+     },
+     "language_Urdu": {
+      "accepted": 54,
+      "errors": 40
+     },
+     "language_English": {
+      "accepted": 58,
+      "errors": 51
+     },
+     "language_Mixed": {
+      "accepted": 36,
+      "errors": 29
+     },
+     "gender_f": {
+      "accepted": 50,
+      "errors": 40
+     },
+     "language_German": {
+      "accepted": 17,
+      "errors": 15
+     }
+    }
+   }
+  }
+ },
+ "chosen_mode": "local",
+ "pseudo_pairs_written": {
+  "pairs": 6,
+  "rows": 600,
+  "conflict_groups": 2
+ }
+}

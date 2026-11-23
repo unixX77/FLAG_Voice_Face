@@ -1,0 +1,11 @@
+CodaBench dev-phase scoring of submissions/v2.zip (md5 6517447d3906cf2e787774fab932f885), 2026-10-13
+Model trained on: English
+
+track       test      cond        pairs    pos      EER
+--------------------------------------------------------------------------
+no_gender   English   heard        1008    504   23.61%
+no_gender   Bangla    unheard      1406    703   23.19%
+gender      English   heard         982    491   35.85%
+gender      Bangla    unheard      1468    734   33.79%
+--------------------------------------------------------------------------
+OVERALL: mean EER over 4 cells = 0.2911 (29.11%)

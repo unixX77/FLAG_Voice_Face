@@ -1,0 +1,5 @@
+# InsightFace face age/gender + ArcFace (tested env "face_features": Python 3.10.22). Model: buffalo_l.
+insightface==0.7.3
+onnxruntime-gpu==1.23.2
+opencv-python-headless==4.10.0.84
+numpy==1.26.4

@@ -1,0 +1,71 @@
+{
+  "run_a": "runs/phase2/g3_cat_farl/fold_{fold}_seed_{seed}/checkpoint_last.pth.tar",
+  "run_b": "runs/phase3/o_res/fold_{fold}_seed_{seed}/checkpoint_last.pth.tar",
+  "seeds": [
+    1
+  ],
+  "standard": {
+    "a": 0.2081,
+    "b": 0.2094,
+    "b_minus_a": 0.0013,
+    "ci95": [
+      -0.0087,
+      0.0123
+    ],
+    "p_b_better": 0.365
+  },
+  "gender": {
+    "a": 0.3203,
+    "b": 0.3241,
+    "b_minus_a": 0.0039,
+    "ci95": [
+      -0.0099,
+      0.0191
+    ],
+    "p_b_better": 0.238
+  },
+  "mean": {
+    "a": 0.2642,
+    "b": 0.2668,
+    "b_minus_a": 0.0026,
+    "ci95": [
+      -0.0075,
+      0.0139
+    ],
+    "p_b_better": 0.247
+  },
+  "per_fold_eer": {
+    "a": {
+      "standard": [
+        0.1764,
+        0.2029,
+        0.195,
+        0.2121,
+        0.2543
+      ],
+      "gender": [
+        0.2907,
+        0.3171,
+        0.3014,
+        0.32,
+        0.3721
+      ]
+    },
+    "b": {
+      "standard": [
+        0.1829,
+        0.2057,
+        0.18,
+        0.2371,
+        0.2414
+      ],
+      "gender": [
+        0.2971,
+        0.3221,
+        0.2857,
+        0.3307,
+        0.385
+      ]
+    }
+  }
+}

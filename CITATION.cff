@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this code or its results, please cite the repository."
+title: "Matching Faces and Voices Across Languages: complementary acoustic and visual representations for FLAG 2027"
+type: software
+authors:
+  - alias: unixx77
+repository-code: "https://github.com/unixX77/FLAG_Voice_Face"
+url: "https://unixx77.github.io/FLAG_Voice_Face/"
+date-released: 2026-11-23
+keywords: [face-voice association, cross-modal verification, multilingual, speaker embeddings, FLAG 2027]
