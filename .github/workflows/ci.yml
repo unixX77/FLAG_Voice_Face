@@ -18,10 +18,13 @@ jobs:
         run: python -m pytest -q tests
       - name: Module unit tests (data-dependent tests skip)
         working-directory: FLAG_2027
-        run: >
-          python -m pytest -q local_validation/test_cross_modal.py local_validation/test_fold_pipeline.py
-          local_validation/test_full_submission.py local_validation/test_metrics.py
-          gamp_vf/test_gamp_vf.py gamp_vf/test_pseudo_pipeline.py phase2/test_phase2.py phase3/test_phase3.py
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m pytest -q -rfE local_validation/test_cross_modal.py local_validation/test_fold_pipeline.py \
+            local_validation/test_full_submission.py local_validation/test_metrics.py \
+            gamp_vf/test_gamp_vf.py gamp_vf/test_pseudo_pipeline.py phase2/test_phase2.py phase3/test_phase3.py 2>&1 | tee pytest.log \
+            || { grep -E "^(FAILED|ERROR)|Error:|error:" pytest.log | head -10 | sed 's/^/::error::/'; exit 1; }
   site:
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: site } }
