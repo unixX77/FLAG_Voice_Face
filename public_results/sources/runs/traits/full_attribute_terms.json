@@ -1,0 +1,35 @@
+{
+  "description": "Fixed age/gender-consistency terms; distance = base_distance + w_age*|corr_voice_age - face_age|/10 + w_gender*|p_male_voice - male_face|",
+  "voice_age_correction": {
+    "male": {
+      "slope": 0.5595536057636848,
+      "intercept": 15.310711604664451
+    },
+    "female": {
+      "slope": 0.3826044991670006,
+      "intercept": 14.321950470385078
+    }
+  },
+  "weights": {
+    "no_gender": {
+      "w_age_per_10_years": 0.02,
+      "w_gender": 0.05,
+      "cv_mean_eer": 0.1996666666666667,
+      "cv_mean_eer_without_terms": 0.2034285714285714
+    },
+    "gender": {
+      "w_age_per_10_years": 0.03,
+      "w_gender": 0.0,
+      "cv_mean_eer": 0.3191904761904762,
+      "cv_mean_eer_without_terms": 0.31966666666666665
+    }
+  },
+  "fitted_on": "official training set only (all 70 identities for the correction; 5 folds x seeds for the weights)",
+  "fold_models": "runs/traits/full/fold_{fold}_seed_{seed}/checkpoint_last.pth.tar",
+  "seeds": [
+    1,
+    2,
+    3
+  ],
+  "weight_scale": 1.0
+}

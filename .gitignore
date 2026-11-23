@@ -1,13 +1,14 @@
-# data, features, checkpoints and outputs are never committed
-train_set/
-dev_set/
-evaluation_phase/
-external_data/
-features/
-checkpoints/
-submissions/
-runs/
-models/
+# data, features, checkpoints and outputs are never committed (top-level folders only;
+# public_results/sources/runs, scripts/runs and FLAG_2027/external_data are code/results and are committed)
+/train_set/
+/dev_set/
+/evaluation_phase/
+/external_data/
+/features/
+/checkpoints/
+/submissions/
+/runs/
+/models/
 *.pth
 *.pth.tar
 *.zip
@@ -17,3 +18,4 @@ site/node_modules/
 site/dist/
 site/src/data/experiments.json
 npm_install.log
+site/.vite/

@@ -1,0 +1,73 @@
+{
+  "run_a": "runs/voice_aug/base/fold_{fold}_seed_{seed}/checkpoint_last.pth.tar",
+  "run_b": "runs/speaker_embedding/wavlm_ecapa/fold_{fold}_seed_{seed}/checkpoint_last.pth.tar",
+  "seeds": [
+    1,
+    2,
+    3
+  ],
+  "standard": {
+    "a": 0.2288,
+    "b": 0.2283,
+    "b_minus_a": -0.0005,
+    "ci95": [
+      -0.0125,
+      0.0122
+    ],
+    "p_b_better": 0.472
+  },
+  "gender": {
+    "a": 0.3417,
+    "b": 0.348,
+    "b_minus_a": 0.0064,
+    "ci95": [
+      -0.0158,
+      0.0233
+    ],
+    "p_b_better": 0.342
+  },
+  "mean": {
+    "a": 0.2852,
+    "b": 0.2882,
+    "b_minus_a": 0.003,
+    "ci95": [
+      -0.0129,
+      0.017
+    ],
+    "p_b_better": 0.371
+  },
+  "per_fold_eer": {
+    "a": {
+      "standard": [
+        0.1871,
+        0.2593,
+        0.2105,
+        0.2733,
+        0.2136
+      ],
+      "gender": [
+        0.3136,
+        0.3671,
+        0.3055,
+        0.3752,
+        0.3469
+      ]
+    },
+    "b": {
+      "standard": [
+        0.184,
+        0.2771,
+        0.2067,
+        0.2402,
+        0.2333
+      ],
+      "gender": [
+        0.2998,
+        0.4164,
+        0.305,
+        0.3593,
+        0.3598
+      ]
+    }
+  }
+}

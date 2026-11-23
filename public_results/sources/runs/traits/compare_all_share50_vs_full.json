@@ -1,0 +1,73 @@
+{
+  "run_a": "runs/external/all_share50/fold_{fold}_seed_{seed}/checkpoint_last.pth.tar",
+  "run_b": "runs/traits/full/fold_{fold}_seed_{seed}/checkpoint_last.pth.tar",
+  "seeds": [
+    1,
+    2,
+    3
+  ],
+  "standard": {
+    "a": 0.2118,
+    "b": 0.2034,
+    "b_minus_a": -0.0084,
+    "ci95": [
+      -0.0159,
+      0.0014
+    ],
+    "p_b_better": 0.942
+  },
+  "gender": {
+    "a": 0.3228,
+    "b": 0.3197,
+    "b_minus_a": -0.0031,
+    "ci95": [
+      -0.0139,
+      0.0056
+    ],
+    "p_b_better": 0.772
+  },
+  "mean": {
+    "a": 0.2673,
+    "b": 0.2615,
+    "b_minus_a": -0.0057,
+    "ci95": [
+      -0.0138,
+      0.0023
+    ],
+    "p_b_better": 0.896
+  },
+  "per_fold_eer": {
+    "a": {
+      "standard": [
+        0.1805,
+        0.1988,
+        0.204,
+        0.229,
+        0.2467
+      ],
+      "gender": [
+        0.2871,
+        0.3107,
+        0.3088,
+        0.3424,
+        0.3648
+      ]
+    },
+    "b": {
+      "standard": [
+        0.1726,
+        0.1864,
+        0.2055,
+        0.2233,
+        0.2293
+      ],
+      "gender": [
+        0.2771,
+        0.2986,
+        0.3081,
+        0.3364,
+        0.3781
+      ]
+    }
+  }
+}
